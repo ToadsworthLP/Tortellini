@@ -1,0 +1,195 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Tortellini/Player/Player.cs" type="Script" id=1]
+[ext_resource path="res://Tortellini/Player/Frm_MarioBig.tres" type="SpriteFrames" id=2]
+[ext_resource path="res://Tortellini/Utilities/DebugText.cs" type="Script" id=3]
+
+[sub_resource type="ProceduralSky" id=1]
+sky_curve = 0.046587
+
+[sub_resource type="Environment" id=2]
+background_mode = 2
+background_sky = SubResource( 1 )
+background_color = Color( 1, 1, 1, 1 )
+ambient_light_color = Color( 1, 0.996078, 0.823529, 1 )
+
+[sub_resource type="CylinderShape" id=3]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CylinderShape" id=4]
+radius = 0.4
+height = 0.419661
+
+[node name="Spatial" type="Spatial"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.5, 0.709406, -0.496732, 0, 0.573576, 0.819152, 0.866025, -0.409576, 0.286788, 0, 8, 0 )
+shadow_enabled = true
+shadow_bias = 0.05
+
+[node name="Player" type="KinematicBody" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.1472, 0 )
+collision_layer = 4
+script = ExtResource( 1 )
+Gravity = Vector3( 0, -4, 0 )
+TerminalVelocity = Vector3( 100, -10, 100 )
+MaxFloorAngle = 0.9
+AirInertia = 0.1
+WalkAcceleration = 0.5
+RunAcceleration = 0.5
+AirAcceleration = 0.3
+MaxWalkSpeed = 8.0
+MaxRunSpeed = 14.0
+MaxAirSpeed = 10.0
+JumpSpeed = 10.0
+MaxJumpTime = 0.5
+
+[node name="PlayerSprite" type="AnimatedSprite3D" parent="Player"]
+transform = Transform( 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, -0.02722, -0.5 )
+double_sided = false
+alpha_cut = 2
+frames = ExtResource( 2 )
+animation = "Idle"
+playing = true
+
+[node name="PlayerCollision" type="CollisionShape" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0400009, -0.24722, -0.5 )
+shape = SubResource( 3 )
+
+[node name="Camera" type="Camera" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 10 )
+
+[node name="GroundDetector" type="Area" parent="Player"]
+editor/display_folded = true
+collision_layer = 4
+
+[node name="FeetCollision" type="CollisionShape" parent="Player/GroundDetector"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0403175, -1.04116, -0.5 )
+shape = SubResource( 4 )
+
+[node name="ActorDetector" type="Area" parent="Player"]
+editor/display_folded = true
+collision_layer = 4
+collision_mask = 6
+
+[node name="FeetCollision" type="CollisionShape" parent="Player/ActorDetector"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0403175, -1.04116, -0.5 )
+shape = SubResource( 4 )
+
+[node name="Ground" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5 )
+
+[node name="CSGBox" type="CSGBox" parent="Ground"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0 )
+use_collision = true
+width = 50.0
+height = 1.0
+depth = 3.0
+
+[node name="Block" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
+use_collision = true
+width = 1.0
+height = 1.0
+depth = 1.0
+
+[node name="Block2" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
+use_collision = true
+width = 1.0
+height = 1.0
+depth = 1.0
+
+[node name="Block7" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 8, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block7"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
+use_collision = true
+height = 1.0
+depth = 1.0
+
+[node name="Block3" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block3"]
+transform = Transform( 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
+use_collision = true
+width = 6.82173
+height = 1.0
+depth = 1.0
+
+[node name="Block4" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, -17, 2, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block4"]
+transform = Transform( 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
+use_collision = true
+width = 6.82173
+height = 1.0
+depth = 1.0
+
+[node name="Block5" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, -19, 2, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block5"]
+transform = Transform( 0.996195, 0.0871555, 0, -0.0871555, 0.996195, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
+use_collision = true
+width = 6.82173
+height = 1.0
+depth = 1.0
+
+[node name="Block6" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 0.173648, 0.984808, 0, -0.984808, 0.173648, 0, 0, 0, 1, -22, 3, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block6"]
+transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
+use_collision = true
+width = 6.82173
+height = 1.0
+depth = 1.0
+
+[node name="Block8" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.58739, 3, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block8"]
+transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, 18.8145, 29.8159, -0.5 )
+use_collision = true
+width = 1.0
+height = 50.0
+depth = 1.0
+
+[node name="UI" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 500.0
+margin_bottom = 500.0
+custom_colors/default_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+bbcode_enabled = true
+scroll_following = true
+script = ExtResource( 3 )
