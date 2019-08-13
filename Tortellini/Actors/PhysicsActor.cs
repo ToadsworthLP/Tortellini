@@ -8,13 +8,12 @@ public class PhysicsActor : Actor
     [Export]
     public Vector3 Gravity;
     [Export]
-    public Vector3 TerminalVelocity;
-    [Export(PropertyHint.Range, "0, 1, 0.01")]
+
     public float MaxFloorAngle = 0.9f;
 
     public bool SnapToGround = true;
 
-    protected Vector3 SnapVector = new Vector3(0, -1, 0);
+    protected Vector3 SnapVector = new Vector3(0, -0.25f, 0);
     protected bool OnGround;
     private Vector3 PreviousVelocity = Vector3.Zero;
 

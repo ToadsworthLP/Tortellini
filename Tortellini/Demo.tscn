@@ -36,18 +36,18 @@ editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.1472, 0 )
 collision_layer = 4
 script = ExtResource( 1 )
-Gravity = Vector3( 0, -4, 0 )
-TerminalVelocity = Vector3( 100, -10, 100 )
+Gravity = Vector3( 0, -3, 0 )
 MaxFloorAngle = 0.9
+Inertia = 0.9
 AirInertia = 0.1
-WalkAcceleration = 0.5
-RunAcceleration = 0.5
-AirAcceleration = 0.3
+WalkAcceleration = 1.25
+RunAcceleration = 1.25
+AirAcceleration = 1.25
 MaxWalkSpeed = 8.0
 MaxRunSpeed = 14.0
-MaxAirSpeed = 10.0
-JumpSpeed = 10.0
+JumpSpeed = 35.0
 MaxJumpTime = 0.5
+JumpSustainGravityMultiplier = 0.5
 
 [node name="PlayerSprite" type="AnimatedSprite3D" parent="Player"]
 transform = Transform( 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, -0.02722, -0.5 )

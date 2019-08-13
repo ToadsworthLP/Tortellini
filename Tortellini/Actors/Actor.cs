@@ -6,6 +6,7 @@ public class Actor : KinematicBody
     public Vector3 Velocity = Vector3.Zero;
     protected Vector3 FloorNormal = new Vector3(0, 1, 0);
     protected ActorState CurrentState;
+    protected ActorState PreviousState;
     protected float StateChangeTimer;
 
     //Actor methods - override these instead of Godot's!
@@ -28,6 +29,7 @@ public class Actor : KinematicBody
         MoveLockZ = true;
 
         CurrentState = GetDefaultState();
+        PreviousState = CurrentState;
         CurrentState?.OnEnterState();
     }
 
@@ -54,6 +56,7 @@ public class Actor : KinematicBody
     public void ChangeState(ActorState newState)
     {
         CurrentState.OnExitState();
+        PreviousState = CurrentState;
         CurrentState = newState;
         StateChangeTimer = 0;
         CurrentState.OnEnterState();
