@@ -29,11 +29,11 @@ public class PhysicsActor : Actor
             CurrentState?.OnPhysicsProcessState(delta);
 
             //If we're not on the ground, add gravity
-            if (!IsOnFloor()){
+            if (!IsOnFloor() || !SnapToGround){
                 //if(Velocity.y >= TerminalVelocity.y) { Velocity.y += Gravity.y; } else { Velocity.y = Gravity.y; }
                 Velocity += Gravity;
             } else {
-                Velocity.y = Mathf.Max(Velocity.y, Gravity.y);
+                Velocity.y = 0;
             }
 
             //If we're running into a wall, don't build up force

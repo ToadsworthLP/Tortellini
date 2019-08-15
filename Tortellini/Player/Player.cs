@@ -84,7 +84,8 @@ public class Player : PhysicsActor
 
             //Move the player
             Vector2 movement = new Vector2();
-            movement.x = sideInput * (isRunPressed ? RunAcceleration : WalkAcceleration);
+            movement.x = sideInput * WalkAcceleration;
+            //movement.x = Mathf.Abs(Velocity.x) + Mathf.Abs(movement.x) > MaxWalkSpeed ? (MaxWalkSpeed - Mathf.Abs(Velocity.x)) * Mathf.Sign(movement.x) : movement.x;
             ApplyForce2D(movement);
 
             //Update the walking animation speed
@@ -94,7 +95,7 @@ public class Player : PhysicsActor
             CanJump();
 
             //Enforce walk speed limit
-            if (Math.Abs(Velocity.x) > MaxWalkSpeed) { Velocity.x = Interpolation.Lerp(Velocity.x, MaxWalkSpeed * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
+            if (Math.Abs(Velocity.x) >= MaxWalkSpeed) { Velocity.x = Interpolation.Lerp(Velocity.x, MaxWalkSpeed * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
         }, () =>
         { //Exit State
 
@@ -120,7 +121,8 @@ public class Player : PhysicsActor
 
             //Move the player
             Vector2 movement = new Vector2();
-            movement.x = sideInput * (isRunPressed ? RunAcceleration : WalkAcceleration);
+            movement.x = sideInput * RunAcceleration;
+            //movement.x = Mathf.Abs(Velocity.x) + Mathf.Abs(movement.x) > MaxRunSpeed ? (MaxRunSpeed - Mathf.Abs(Velocity.x)) * Mathf.Sign(movement.x) : movement.x;
             ApplyForce2D(movement);
 
             //Update the walking animation speed
@@ -130,7 +132,7 @@ public class Player : PhysicsActor
             CanJump();
 
             //Enforce walk speed limit
-            if (Math.Abs(Velocity.x) > MaxRunSpeed) { Velocity.x = Interpolation.Lerp(Velocity.x, MaxRunSpeed * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
+            if (Math.Abs(Velocity.x) >= MaxRunSpeed) { Velocity.x = Interpolation.Lerp(Velocity.x, MaxRunSpeed * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
         }, () =>
         { //Exit State
 
@@ -172,7 +174,7 @@ public class Player : PhysicsActor
 
             //Enforce air speed limit
             float speedLimit = Mathf.Min(Mathf.Abs(JumpSpeedBuffer), MaxRunSpeed);
-            if (Mathf.Abs(Velocity.x) > speedLimit) { Velocity.x = Interpolation.Lerp(Velocity.x, speedLimit * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
+            if (Mathf.Abs(Velocity.x) >= speedLimit) { Velocity.x = Interpolation.Lerp(Velocity.x, speedLimit * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
         }, () =>
         { //Exit State
             DebugText.Remove("jumpTime");
@@ -207,7 +209,7 @@ public class Player : PhysicsActor
                 if (Math.Abs(Velocity.x) > MaxWalkSpeed) { Velocity.x = Interpolation.Lerp(Velocity.x, MaxWalkSpeed * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
             } */
             float speedLimit = Mathf.Min(Mathf.Abs(JumpSpeedBuffer), MaxRunSpeed);
-            if (Mathf.Abs(Velocity.x) > speedLimit) { Velocity.x = Interpolation.Lerp(Velocity.x, speedLimit * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
+            if (Mathf.Abs(Velocity.x) >= speedLimit) { Velocity.x = Interpolation.Lerp(Velocity.x, speedLimit * Mathf.Sign(Velocity.x), GetElapsedTimeInState()); }
         }, () =>
         { //Exit State
 
