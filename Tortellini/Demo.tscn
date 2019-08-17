@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Tortellini/Player/Player.cs" type="Script" id=1]
-[ext_resource path="res://Tortellini/Player/Frm_MarioBig.tres" type="SpriteFrames" id=2]
-[ext_resource path="res://Tortellini/Utilities/DebugText.cs" type="Script" id=3]
+[ext_resource path="res://Tortellini/Player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Tortellini/Utilities/DebugText.cs" type="Script" id=2]
 
 [sub_resource type="ProceduralSky" id=1]
 sky_curve = 0.046587
@@ -12,14 +11,6 @@ background_mode = 2
 background_sky = SubResource( 1 )
 background_color = Color( 1, 1, 1, 1 )
 ambient_light_color = Color( 1, 0.996078, 0.823529, 1 )
-
-[sub_resource type="CylinderShape" id=3]
-radius = 0.4
-height = 1.8
-
-[sub_resource type="CylinderShape" id=4]
-radius = 0.4
-height = 0.419661
 
 [node name="Spatial" type="Spatial"]
 
@@ -31,57 +22,27 @@ transform = Transform( 0.5, 0.709406, -0.496732, 0, 0.573576, 0.819152, 0.866025
 shadow_enabled = true
 shadow_bias = 0.05
 
-[node name="Player" type="KinematicBody" parent="."]
+[node name="Player" parent="." instance=ExtResource( 1 )]
 editor/display_folded = true
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.1472, 0 )
-collision_layer = 4
-script = ExtResource( 1 )
-Gravity = Vector3( 0, -2, 0 )
-MaxFloorAngle = 0.9
-Inertia = 1.0
-AirInertia = 0.0
-WalkAcceleration = 1.5
-RunAcceleration = 1.5
-AirAcceleration = 1.0
-MaxWalkSpeed = 8.0
-MaxRunSpeed = 16.0
-JumpSpeed = 28.0
-MaxJumpTime = 0.5
-JumpSustainGravityMultiplier = 0.5
-
-[node name="PlayerSprite" type="AnimatedSprite3D" parent="Player"]
-transform = Transform( 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, -0.02722, -0.5 )
-double_sided = false
-alpha_cut = 2
-frames = ExtResource( 2 )
-animation = "Idle"
-playing = true
-
-[node name="PlayerCollision" type="CollisionShape" parent="Player"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0400009, -0.24722, -0.5 )
-shape = SubResource( 3 )
-
-[node name="Camera" type="Camera" parent="Player"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 10 )
-
-[node name="GroundDetector" type="Area" parent="Player"]
-editor/display_folded = true
-collision_layer = 4
-
-[node name="FeetCollision" type="CollisionShape" parent="Player/GroundDetector"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0403175, -1.04116, -0.5 )
-shape = SubResource( 4 )
-
-[node name="ActorDetector" type="Area" parent="Player"]
-editor/display_folded = true
-collision_layer = 4
-collision_mask = 6
-
-[node name="FeetCollision" type="CollisionShape" parent="Player/ActorDetector"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0403175, -1.04116, -0.5 )
-shape = SubResource( 4 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16.387, 1.17169, -0.05 )
+Gravity = Vector3( 0, -1, 0 )
+PlayerNumber = 1
+WalkAcceleration = 1.0
+WalkSpeed = 3.7
+RunAcceleration = 1.0
+RunSpeed = 6.4
+LongRunAcceleration = 1.0
+LongRunSpeed = 9.1
+LongRunTime = 1.5
+JumpForce = 15.0
+MaxJumpSustainTime = 0.5
+JumpSustainGravityMultiplier = 0.55
+AirHorizontalAcceleration = 0.75
+FloorFriction = 0.5
+AirFriction = 0.05
 
 [node name="Ground" type="Spatial" parent="."]
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5 )
 
 [node name="CSGBox" type="CSGBox" parent="Ground"]
@@ -92,7 +53,6 @@ height = 1.0
 depth = 3.0
 
 [node name="Block" type="Spatial" parent="."]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Block"]
@@ -114,12 +74,51 @@ height = 1.0
 depth = 1.0
 
 [node name="Block7" type="Spatial" parent="."]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 8, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Block7"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
 use_collision = true
+height = 1.0
+depth = 1.0
+
+[node name="Block9" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 3.5, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block9"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
+use_collision = true
+height = 1.0
+depth = 1.0
+
+[node name="Block10" type="Spatial" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 6, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block10"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
+use_collision = true
+height = 1.0
+depth = 1.0
+
+[node name="Block11" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 8, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block11"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.5, -0.5 )
+use_collision = true
+width = 4.0
+height = 1.0
+depth = 1.0
+
+[node name="Block12" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 8, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block12"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.5 )
+use_collision = true
+width = 6.0
 height = 1.0
 depth = 1.0
 
@@ -169,13 +168,22 @@ depth = 1.0
 
 [node name="Block8" type="Spatial" parent="."]
 editor/display_folded = true
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.58739, 3, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Block8"]
-transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, 18.8145, 29.8159, -0.5 )
+transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, 12, 11.5, -0.5 )
 use_collision = true
 width = 1.0
-height = 50.0
+height = 7.0
+depth = 1.0
+
+[node name="Block13" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 10, -0.5 )
+
+[node name="CSGBox" type="CSGBox" parent="Block13"]
+transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, -0.5, 0.5, 0 )
+use_collision = true
+width = 1.0
+height = 5.0
 depth = 1.0
 
 [node name="UI" type="Control" parent="."]
@@ -191,4 +199,4 @@ custom_colors/default_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 bbcode_enabled = true
 scroll_following = true
-script = ExtResource( 3 )
+script = ExtResource( 2 )

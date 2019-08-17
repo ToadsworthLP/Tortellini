@@ -1,6 +1,6 @@
 using Godot;
 
-public class Interpolation
+public class ClampedInterpolation
 {
     public static float Lerp(float a, float b, float t) {
         if(t >= 1) return b;
