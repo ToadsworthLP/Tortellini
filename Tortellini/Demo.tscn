@@ -34,12 +34,14 @@ RunSpeed = 6.4
 LongRunAcceleration = 1.0
 LongRunSpeed = 9.1
 LongRunTime = 1.5
-JumpForce = 15.0
-MaxJumpSustainTime = 0.5
+IdleJumpForce = 12.5
+WalkJumpForce = 13.8
+LongRunJumpForce = 15.0
+MaxJumpSustainTime = 0.45
 JumpSustainGravityMultiplier = 0.55
-AirHorizontalAcceleration = 0.75
+AirHorizontalAcceleration = 0.6
 FloorFriction = 0.5
-AirFriction = 0.05
+AirFriction = 0.1
 
 [node name="Ground" type="Spatial" parent="."]
 editor/display_folded = true
@@ -83,11 +85,10 @@ height = 1.0
 depth = 1.0
 
 [node name="Block9" type="Spatial" parent="."]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 3.5, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Block9"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -0.5 )
 use_collision = true
 height = 1.0
 depth = 1.0
@@ -97,16 +98,25 @@ editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 6, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Block10"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -1.5, -0.5 )
+use_collision = true
+height = 1.0
+depth = 1.0
+
+[node name="Block14" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 7, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="Block14"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -0.5 )
 use_collision = true
 height = 1.0
 depth = 1.0
 
 [node name="Block11" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 8, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 8, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Block11"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.5, -0.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -0.5 )
 use_collision = true
 width = 4.0
 height = 1.0
@@ -167,23 +177,22 @@ height = 1.0
 depth = 1.0
 
 [node name="Block8" type="Spatial" parent="."]
-editor/display_folded = true
 
 [node name="CSGBox" type="CSGBox" parent="Block8"]
-transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, 12, 11.5, -0.5 )
+transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, 12, 11, -0.5 )
 use_collision = true
 width = 1.0
-height = 7.0
+height = 6.0
 depth = 1.0
 
 [node name="Block13" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 10, -0.5 )
 
 [node name="CSGBox" type="CSGBox" parent="Block13"]
-transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, -0.5, 0.5, 0 )
+transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, -0.5, 1, 0 )
 use_collision = true
 width = 1.0
-height = 5.0
+height = 4.0
 depth = 1.0
 
 [node name="UI" type="Control" parent="."]

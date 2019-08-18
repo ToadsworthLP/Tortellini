@@ -21,7 +21,11 @@ public class Player : PhysicsActor
     [Export]
     public float LongRunTime;
     [Export]
-    public float JumpForce;
+    public float IdleJumpForce;
+    [Export]
+    public float WalkJumpForce;
+    [Export]
+    public float LongRunJumpForce;
     [Export]
     public float MaxJumpSustainTime;
     [Export]
@@ -43,9 +47,9 @@ public class Player : PhysicsActor
 
     //Speed limit handling
     private float SpeedLimit;
-    private float LerpDuration = 0.5f;
-    private float LerpStartTime;
-    private float LerpStartVelocity;
+    private float SpeedLerpDuration = 0.5f;
+    private float SpeedLerpStartTime;
+    private float SpeedLerpStartVelocity;
 
     //Input manager for this player instance
     private InputManager InputManager;
@@ -60,14 +64,20 @@ public class Player : PhysicsActor
 
         StandState = new ActorState(() =>
         { //Enter State
-            PlayerSprite.SetAnimation(Animation.IDLE);
+            
             SnapToGround = true;
         }, (float delta) =>
         { //Process State
-            
+            if(Mathf.Abs(Velocity.x) > 0.5f) {
+                PlayerSprite.SetAnimation(PlayerAnimation.WALK);
+                PlayerSprite.Frames.SetAnimationSpeed(PlayerAnimation.WALK, (Mathf.Abs(Velocity.x)) + 5);
+            } else {
+                PlayerSprite.SetAnimation(PlayerAnimation.IDLE);
+            }
         }, (float delta) =>
         { //State Physics Processing
             if(InputManager.DirectionalInput.x != 0) ChangeState(WalkState);
+            CanFall();
             CanJump();
         }, () =>
         { //Exit State
@@ -76,16 +86,21 @@ public class Player : PhysicsActor
 
         WalkState = new ActorState(() =>
         { //Enter State
-            PlayerSprite.SetAnimation(Animation.WALK);
             SetSpeedLimit(WalkSpeed);
             SnapToGround = true;
         }, (float delta) =>
         { //Process State
-            PlayerSprite.Frames.SetAnimationSpeed(Animation.WALK, (Mathf.Abs(Velocity.x)) + 5);
+            if(Mathf.Sign(Velocity.x) == Mathf.Sign(InputManager.DirectionalInput.x) || Velocity.x == 0) {
+                PlayerSprite.SetAnimation(PlayerAnimation.WALK);
+                PlayerSprite.Frames.SetAnimationSpeed(PlayerAnimation.WALK, (Mathf.Abs(Velocity.x)) + 5);
+            } else {
+                PlayerSprite.SetAnimation(PlayerAnimation.TURN);
+            }
         }, (float delta) =>
         { //State Physics Processing
             if(InputManager.DirectionalInput.x == 0) ChangeState(StandState);
             if(InputManager.RunPressed || InputManager.AltRunPressed) ChangeState(RunState);
+            CanFall();
             CanJump();
 
             float force = InputManager.DirectionalInput.x * WalkAcceleration;
@@ -97,18 +112,24 @@ public class Player : PhysicsActor
 
         RunState = new ActorState(() =>
         { //Enter State
-            PlayerSprite.SetAnimation(Animation.WALK);
             SetSpeedLimit(RunSpeed);
             SnapToGround = true;
         }, (float delta) =>
         { //Process State
-            PlayerSprite.Frames.SetAnimationSpeed(Animation.WALK, (Mathf.Abs(Velocity.x)) + 5);
+            if(Mathf.Sign(Velocity.x) == Mathf.Sign(InputManager.DirectionalInput.x) || Velocity.x == 0) {
+                PlayerSprite.SetAnimation(PlayerAnimation.WALK);
+                PlayerSprite.Frames.SetAnimationSpeed(PlayerAnimation.WALK, (Mathf.Abs(Velocity.x)) + 7);
+            } else {
+                PlayerSprite.SetAnimation(PlayerAnimation.TURN);
+            }
         }, (float delta) =>
         { //State Physics Processing
             if(InputManager.DirectionalInput.x == 0) ChangeState(StandState);
             if(!InputManager.RunPressed && !InputManager.AltRunPressed) ChangeState(WalkState);
             if(GetElapsedTimeInState() > LongRunTime) ChangeState(LongRunState);
+            CanFall();
             CanJump();
+
 
             float force = InputManager.DirectionalInput.x * RunAcceleration;
             ApplyForce2D(new Vector2(force, 0));
@@ -119,16 +140,22 @@ public class Player : PhysicsActor
 
         LongRunState = new ActorState(() =>
         { //Enter State
-            PlayerSprite.SetAnimation(Animation.WALK);
+            PlayerSprite.SetAnimation(PlayerAnimation.LONG_RUN);
             SetSpeedLimit(LongRunSpeed);
             SnapToGround = true;
         }, (float delta) =>
         { //Process State
-            PlayerSprite.Frames.SetAnimationSpeed(Animation.WALK, (Mathf.Abs(Velocity.x)) + 5);
+            if(Mathf.Sign(Velocity.x) == Mathf.Sign(InputManager.DirectionalInput.x) || Velocity.x == 0) {
+                PlayerSprite.SetAnimation(PlayerAnimation.LONG_RUN);
+                PlayerSprite.Frames.SetAnimationSpeed(PlayerAnimation.LONG_RUN, (Mathf.Abs(Velocity.x)) + 10);
+            } else {
+                PlayerSprite.SetAnimation(PlayerAnimation.TURN);
+            }
         }, (float delta) =>
         { //State Physics Processing
             if(InputManager.DirectionalInput.x == 0) ChangeState(StandState);
             if(!InputManager.RunPressed && !InputManager.AltRunPressed) ChangeState(WalkState);
+            CanFall();
             CanJump();
 
             float force = InputManager.DirectionalInput.x * LongRunAcceleration;
@@ -140,9 +167,19 @@ public class Player : PhysicsActor
 
         JumpState = new ActorState(() =>
         { //Enter State
-            PlayerSprite.SetAnimation(Animation.JUMP);
             SnapToGround = false;
-            ApplyForce2D(new Vector2(0, JumpForce));
+            
+            float speed = Mathf.Abs(Velocity.x);
+            if(speed > RunSpeed) {
+                ApplyForce2D(new Vector2(0, LongRunJumpForce));
+                PlayerSprite.SetAnimation(PlayerAnimation.HIGH_JUMP);
+            } else if(speed > 0.5f) {
+                ApplyForce2D(new Vector2(0, WalkJumpForce));
+                PlayerSprite.SetAnimation(PlayerAnimation.JUMP);
+            } else {
+                ApplyForce2D(new Vector2(0, IdleJumpForce));
+                PlayerSprite.SetAnimation(PlayerAnimation.JUMP);
+            }
         }, (float delta) =>
         { //Process State
             DebugText.Display("P" + PlayerNumber + "_JumpSusTime", "P" + PlayerNumber + " Jump Sustain Time: " + (MaxJumpSustainTime - GetElapsedTimeInState()).ToString());
@@ -171,7 +208,7 @@ public class Player : PhysicsActor
 
         FallState = new ActorState(() =>
         { //Enter State
-            PlayerSprite.SetAnimation(Animation.JUMP);
+            PlayerSprite.SetAnimation(PlayerAnimation.FALL);
             SnapToGround = false;
         }, (float delta) =>
         { //Process State
@@ -200,6 +237,10 @@ public class Player : PhysicsActor
         if(InputManager.JumpJustPressed || InputManager.AltJumpJustPressed) ChangeState(JumpState);
     }
 
+    private void CanFall() {
+        if(!IsOnFloor()) ChangeState(FallState);
+    }
+
     public override void APhysicsProcess(float delta){
         InputManager.UpdateInputs();
     }
@@ -209,7 +250,7 @@ public class Player : PhysicsActor
         Velocity.x = Mathf.Max((Mathf.Abs(Velocity.x) - (IsOnFloor() ? FloorFriction : AirFriction)), 0) * Mathf.Sign(Velocity.x);
 
         //Lerp to speed limit if above
-        if(Mathf.Abs(Velocity.x) > SpeedLimit) { Velocity.x = ClampedInterpolation.Lerp(LerpStartVelocity, SpeedLimit, (Lifetime - LerpStartTime) * (1/LerpDuration)) * Mathf.Sign(Velocity.x); }
+        if(Mathf.Abs(Velocity.x) > SpeedLimit) { Velocity.x = ClampedInterpolation.Lerp(SpeedLerpStartVelocity, SpeedLimit, (Lifetime - SpeedLerpStartTime) * (1/SpeedLerpDuration)) * Mathf.Sign(Velocity.x); }
 
         //DebugText.Display("P" + PlayerNumber + "_SpeedLimit", "P" + PlayerNumber + " Speed Limit: " + SpeedLimit.ToString());
 
@@ -235,15 +276,19 @@ public class Player : PhysicsActor
     private void SetSpeedLimit(float limit){
         if(limit == SpeedLimit) return;
 
-        LerpStartTime = Lifetime;
-        LerpStartVelocity = Mathf.Abs(Velocity.x);
+        SpeedLerpStartTime = Lifetime;
+        SpeedLerpStartVelocity = Mathf.Abs(Velocity.x);
         SpeedLimit = limit;
     }
 
-    private struct Animation {
+    private struct PlayerAnimation {
         public const string IDLE = "Idle";
         public const string WALK = "Walk";
+        public const string LONG_RUN = "LongRun";
+        public const string TURN = "Turn";
         public const string JUMP = "Jump";
+        public const string HIGH_JUMP = "HighJump";
+        public const string FALL = "Fall";
         public const string CROUCH = "Crouch";
         public const string SLIDE = "Slide";
     }
