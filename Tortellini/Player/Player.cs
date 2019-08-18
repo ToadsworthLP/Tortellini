@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class Player : PhysicsActor
 {
@@ -40,6 +39,8 @@ public class Player : PhysicsActor
     public float SlideAcceleration;
     [Export]
     public float SlideSpeed;
+    [Export]
+    public Vector2 CrouchBoostForce;
 
     [Export]
     public float FloorFriction;
@@ -52,7 +53,7 @@ public class Player : PhysicsActor
     //Node references
     public AnimatedSprite3D PlayerSprite;
     public Area ActorDetectorArea;
-    public RayCast RayCast;
+    public RayCast FloorRayCast;
 
     //Player states
     public ActorState StandState, WalkState, RunState, LongRunState, JumpState, SpinJumpState, FallState, CrouchState, SlideState;
@@ -69,12 +70,19 @@ public class Player : PhysicsActor
     //Controls whether player facing is set automatically based on player input
     private bool autoPlayerFacing = true;
 
+    //Controls which PlayerCollisionShape is the default for the current form
+    protected virtual PlayerCollisionShape GetDefaultCollisionShape() {
+        return PlayerCollisionShape.BIG;
+    }
+
+
     public override ActorState GetDefaultState() {return StandState;}
     public override void AReady() {
         PlayerSprite = GetNodeOrNull(new NodePath("PlayerSprite")) as AnimatedSprite3D;
         ActorDetectorArea = GetNodeOrNull(new NodePath("ActorDetector")) as Area;
-        RayCast = GetNodeOrNull(new NodePath("RayCast")) as RayCast;
-        if (PlayerSprite == null || ActorDetectorArea == null || RayCast == null) GD.PrintErr("One or multiple required child nodes could not be found! Some features won't work!");
+        FloorRayCast = GetNodeOrNull(new NodePath("FloorRayCast")) as RayCast;
+
+        if (PlayerSprite == null || ActorDetectorArea == null || FloorRayCast == null) GD.PrintErr("One or multiple required child nodes could not be found! Some features won't work!");
 
         InputManager = new InputManager(PlayerNumber);
 
@@ -197,6 +205,7 @@ public class Player : PhysicsActor
             } else if(PreviousState == CrouchState) {
                 ApplyForce2D(new Vector2(0, IdleJumpForce));
                 PlayerSprite.SetAnimation(PlayerAnimation.CROUCH);
+                SetPlayerCollisionShape(PlayerCollisionShape.SMALL);
             } else {
                 ApplyForce2D(new Vector2(0, IdleJumpForce));
                 PlayerSprite.SetAnimation(PlayerAnimation.JUMP);
@@ -225,6 +234,7 @@ public class Player : PhysicsActor
         }, () =>
         { //Exit State
             DebugText.Remove("P" + PlayerNumber + "_JumpSusTime");
+            SetPlayerCollisionShape(GetDefaultCollisionShape());
         });
 
         SpinJumpState = new ActorState(() =>
@@ -272,6 +282,7 @@ public class Player : PhysicsActor
         { //Enter State
             if(InputManager.DirectionalInput.y < CrouchInputThreshold) {
                 PlayerSprite.SetAnimation(PlayerAnimation.CROUCH);
+                SetPlayerCollisionShape(PlayerCollisionShape.SMALL);
             } else if (PreviousState == SpinJumpState) {
                 PlayerSprite.SetAnimation(PlayerAnimation.SPIN_JUMP);
             } else {
@@ -303,31 +314,51 @@ public class Player : PhysicsActor
             ApplyForce2D(new Vector2(force, 0));
         }, () =>
         { //Exit State
-
+            SetPlayerCollisionShape(GetDefaultCollisionShape());
         });
 
         CrouchState = new ActorState(() =>
         { //Enter State
             SnapToGround = true;
 
-            var angle = Mathf.Rad2Deg(Mathf.Acos(RayCast.GetCollisionNormal().Dot(FloorNormal)));
+            var angle = Mathf.Rad2Deg(Mathf.Acos(FloorRayCast.GetCollisionNormal().Dot(FloorNormal)));
             if(angle >= SlideMinAngle){
                 ChangeState(SlideState);
                 return;
             }
 
             PlayerSprite.SetAnimation(PlayerAnimation.CROUCH);
+            SetPlayerCollisionShape(PlayerCollisionShape.SMALL);
         }, (float delta) =>
         { //Process State
 
         }, (float delta) =>
         { //State Physics Processing
-            if(InputManager.DirectionalInput.y >= CrouchInputThreshold) ChangeState(StandState);
-            CanFall();
-            CanJump();
+            Transform slightlyRight;
+            slightlyRight.origin = Transform.origin;
+            slightlyRight.basis = Transform.basis;
+            slightlyRight.origin.x += 0.5f;
+
+            Transform slightlyLeft;
+            slightlyLeft.origin = Transform.origin;
+            slightlyLeft.basis = Transform.basis;
+            slightlyLeft.origin.x -= 0.5f;
+
+            if(!TestMove(Transform, new Vector3(0, 0.5f, 0))){
+                if(InputManager.DirectionalInput.y >= CrouchInputThreshold) ChangeState(StandState);
+                CanJump();
+                CanFall();
+            } else if(!TestMove(slightlyRight, new Vector3(0, 0.5f, 0))) {
+                ApplyForce2D(new Vector2(0.5f, 0));
+            } else if(!TestMove(slightlyLeft, new Vector3(0, 0.5f, 0))) {
+                ApplyForce2D(new Vector2(-0.5f, 0));
+            } else {
+                if(InputManager.JumpJustPressed || InputManager.AltJumpJustPressed) { ApplyForce2D(new Vector2(CrouchBoostForce.x * InputManager.DirectionalInput.x, CrouchBoostForce.y)); }
+            }
+            
         }, () =>
         { //Exit State
-
+            SetPlayerCollisionShape(GetDefaultCollisionShape());
         });
 
         SlideState = new ActorState(() =>
@@ -350,7 +381,7 @@ public class Player : PhysicsActor
             }
         }, (float delta) =>
         { //State Physics Processing
-            Vector3 normal = RayCast.GetCollisionNormal();
+            Vector3 normal = FloorRayCast.GetCollisionNormal();
             float angle = Mathf.Rad2Deg(Mathf.Acos(normal.Dot(FloorNormal)));
             if(angle < SlideMinAngle) ChangeState(InputManager.DirectionalInput.y < CrouchInputThreshold ? CrouchState : StandState );
             CanFall();
@@ -364,7 +395,7 @@ public class Player : PhysicsActor
         });
     }
 
-    private void CanJump(){
+    protected void CanJump(){
         if(InputManager.JumpJustPressed) {
             ChangeState(JumpState);
         } else if (InputManager.AltJumpJustPressed) {
@@ -372,11 +403,11 @@ public class Player : PhysicsActor
         }
     }
 
-    private void CanFall() {
+    protected void CanFall() {
         if(!IsOnFloor()) ChangeState(FallState);
     }
 
-    private void CanCrouch() {
+    protected void CanCrouch() {
         if(IsOnFloor() && InputManager.DirectionalInput.y < CrouchInputThreshold) ChangeState(CrouchState);
     }
 
@@ -386,7 +417,7 @@ public class Player : PhysicsActor
 
     public override void APhysicsPostProcess(float delta){
         //Apply friction
-        if(CurrentState == SlideState){
+        if(CurrentState == CrouchState || CurrentState == SlideState){
             Velocity.x = Mathf.Max(Mathf.Abs(Velocity.x) - SlideFriction, 0) * Mathf.Sign(Velocity.x);
         } else {
             Velocity.x = Mathf.Max((Mathf.Abs(Velocity.x) - (IsOnFloor() ? FloorFriction : AirFriction)), 0) * Mathf.Sign(Velocity.x);
@@ -416,9 +447,10 @@ public class Player : PhysicsActor
         DebugText.Display("P" + PlayerNumber + "_Position", "P" + PlayerNumber + " Position: " + Transform.origin.ToString());
         DebugText.Display("P" + PlayerNumber + "_Velocity", "P" + PlayerNumber + " Velocity: " + Velocity.ToString());
         DebugText.Display("P" + PlayerNumber + "_StateTime", "P" + PlayerNumber + " Time in State: " + GetElapsedTimeInState().ToString());
+        DebugText.Display("P" + PlayerNumber + "_FirstChild", "P" + PlayerNumber + " First Child: " + GetChild(0).Name);
     }
 
-    private void SetSpeedLimit(float limit){
+    protected void SetSpeedLimit(float limit){
         if(limit == SpeedLimit) return;
 
         SpeedLerpStartTime = Lifetime;
@@ -426,7 +458,22 @@ public class Player : PhysicsActor
         SpeedLimit = limit;
     }
 
-    private struct PlayerAnimation {
+    protected enum PlayerCollisionShape {SMALL, BIG}
+    protected void SetPlayerCollisionShape(PlayerCollisionShape shape) {
+        switch (shape) {
+            case PlayerCollisionShape.SMALL:
+            ShapeOwnerSetDisabled(0, false);
+            ShapeOwnerSetDisabled(1, true);
+            break;
+
+            case PlayerCollisionShape.BIG:
+            ShapeOwnerSetDisabled(0, true);
+            ShapeOwnerSetDisabled(1, false);
+            break;
+        }
+    }
+
+    protected struct PlayerAnimation {
         public const string IDLE = "Idle";
         public const string WALK = "Walk";
         public const string LONG_RUN = "LongRun";

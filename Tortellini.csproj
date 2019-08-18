@@ -53,6 +53,7 @@
     <Compile Include="Tortellini\Actors\Actor.cs" />
     <Compile Include="Tortellini\Actors\ActorState.cs" />
     <Compile Include="Tortellini\Actors\PhysicsActor.cs" />
+    <Compile Include="Tortellini\Player\BigPlayer.cs" />
     <Compile Include="Tortellini\Player\InputManager.cs" />
     <Compile Include="Tortellini\Player\OldPlayer.cs" />
     <Compile Include="Tortellini\Player\Player.cs" />

@@ -1,7 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Tortellini/Player/Player.cs" type="Script" id=1]
+[ext_resource path="res://Tortellini/Player/BigPlayer.cs" type="Script" id=1]
 [ext_resource path="res://Tortellini/Player/Mario/Frm_MarioBig.tres" type="SpriteFrames" id=2]
+
+[sub_resource type="CylinderShape" id=3]
+radius = 0.4
+height = 0.95
 
 [sub_resource type="CylinderShape" id=1]
 radius = 0.4
@@ -26,14 +30,22 @@ WalkJumpForce = 13.8
 LongRunJumpForce = 15.0
 MaxJumpSustainTime = 0.45
 JumpSustainGravityMultiplier = 0.55
-AirHorizontalAcceleration = 0.6
+AirHorizontalAcceleration = 0.75
 CrouchInputThreshold = -0.5
 SlideMinAngle = 5.0
-SlideAcceleration = 0.8
+SlideAcceleration = 0.75
 SlideSpeed = 6.4
-FloorFriction = 0.4
-AirFriction = 0.1
-SlideFriction = 0.1
+FloorFriction = 0.5
+AirFriction = 0.2
+SlideFriction = 0.2
+
+[node name="SmallCollision" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, -0.697, -0.5 )
+shape = SubResource( 3 )
+
+[node name="BigCollision" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0400009, -0.24722, -0.5 )
+shape = SubResource( 1 )
 
 [node name="PlayerSprite" type="AnimatedSprite3D" parent="."]
 transform = Transform( 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, -0.02722, -0.5 )
@@ -43,14 +55,10 @@ frames = ExtResource( 2 )
 animation = "Idle"
 playing = true
 
-[node name="PlayerCollision" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0400009, -0.24722, -0.5 )
-shape = SubResource( 1 )
-
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 10 )
 
-[node name="RayCast" type="RayCast" parent="."]
+[node name="FloorRayCast" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 0, -3, 0 )
 
