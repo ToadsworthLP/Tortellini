@@ -212,7 +212,7 @@ public class Player : PhysicsActor
             }
         }, (float delta) =>
         { //Process State
-            DebugText.Display("P" + PlayerNumber + "_JumpSusTime", "P" + PlayerNumber + " Jump Sustain Time: " + (MaxJumpSustainTime - GetElapsedTimeInState()).ToString());
+            //DebugText.Display("P" + PlayerNumber + "_JumpSusTime", "P" + PlayerNumber + " Jump Sustain Time: " + (MaxJumpSustainTime - GetElapsedTimeInState()).ToString());
         }, (float delta) =>
         { //State Physics Processing
             if(IsOnFloor()) ChangeState(StandState);
@@ -233,7 +233,7 @@ public class Player : PhysicsActor
             ApplyForce2D(new Vector2(force, 0));
         }, () =>
         { //Exit State
-            DebugText.Remove("P" + PlayerNumber + "_JumpSusTime");
+            //DebugText.Remove("P" + PlayerNumber + "_JumpSusTime");
             SetPlayerCollisionShape(GetDefaultCollisionShape());
         });
 
@@ -254,7 +254,7 @@ public class Player : PhysicsActor
             }
         }, (float delta) =>
         { //Process State
-            DebugText.Display("P" + PlayerNumber + "_JumpSusTime", "P" + PlayerNumber + " Jump Sustain Time: " + (MaxJumpSustainTime - GetElapsedTimeInState()).ToString());
+            //DebugText.Display("P" + PlayerNumber + "_JumpSusTime", "P" + PlayerNumber + " Jump Sustain Time: " + (MaxJumpSustainTime - GetElapsedTimeInState()).ToString());
         }, (float delta) =>
         { //State Physics Processing
             if(IsOnFloor()) ChangeState(StandState);
@@ -275,7 +275,7 @@ public class Player : PhysicsActor
             ApplyForce2D(new Vector2(force, 0));
         }, () =>
         { //Exit State
-            DebugText.Remove("P" + PlayerNumber + "_JumpSusTime");
+            //DebugText.Remove("P" + PlayerNumber + "_JumpSusTime");
         });
 
         FallState = new ActorState(() =>
@@ -337,21 +337,21 @@ public class Player : PhysicsActor
             Transform slightlyRight;
             slightlyRight.origin = Transform.origin;
             slightlyRight.basis = Transform.basis;
-            slightlyRight.origin.x += 0.5f;
+            slightlyRight.origin.x += 0.4f;
 
             Transform slightlyLeft;
             slightlyLeft.origin = Transform.origin;
             slightlyLeft.basis = Transform.basis;
-            slightlyLeft.origin.x -= 0.5f;
+            slightlyLeft.origin.x -= 0.4f;
 
             if(!TestMove(Transform, new Vector3(0, 0.5f, 0))){
                 if(InputManager.DirectionalInput.y >= CrouchInputThreshold) ChangeState(StandState);
                 CanJump();
                 CanFall();
             } else if(!TestMove(slightlyRight, new Vector3(0, 0.5f, 0))) {
-                ApplyForce2D(new Vector2(0.5f, 0));
+                ApplyForce2D(new Vector2(0.4f, 0));
             } else if(!TestMove(slightlyLeft, new Vector3(0, 0.5f, 0))) {
-                ApplyForce2D(new Vector2(-0.5f, 0));
+                ApplyForce2D(new Vector2(-0.4f, 0));
             } else {
                 if(InputManager.JumpJustPressed || InputManager.AltJumpJustPressed) { ApplyForce2D(new Vector2(CrouchBoostForce.x * InputManager.DirectionalInput.x, CrouchBoostForce.y)); }
             }
@@ -444,10 +444,9 @@ public class Player : PhysicsActor
             }
         }
         
-        DebugText.Display("P" + PlayerNumber + "_Position", "P" + PlayerNumber + " Position: " + Transform.origin.ToString());
-        DebugText.Display("P" + PlayerNumber + "_Velocity", "P" + PlayerNumber + " Velocity: " + Velocity.ToString());
-        DebugText.Display("P" + PlayerNumber + "_StateTime", "P" + PlayerNumber + " Time in State: " + GetElapsedTimeInState().ToString());
-        DebugText.Display("P" + PlayerNumber + "_FirstChild", "P" + PlayerNumber + " First Child: " + GetChild(0).Name);
+        //DebugText.Display("P" + PlayerNumber + "_Position", "P" + PlayerNumber + " Position: " + Transform.origin.ToString());
+        //DebugText.Display("P" + PlayerNumber + "_Velocity", "P" + PlayerNumber + " Velocity: " + Velocity.ToString());
+        //DebugText.Display("P" + PlayerNumber + "_StateTime", "P" + PlayerNumber + " Time in State: " + GetElapsedTimeInState().ToString());
     }
 
     protected void SetSpeedLimit(float limit){

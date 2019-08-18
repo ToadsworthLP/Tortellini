@@ -66,5 +66,5 @@ animations = [ {
 "frames": [ ExtResource( 13 ), ExtResource( 10 ), ExtResource( 14 ), ExtResource( 15 ) ],
 "loop": true,
 "name": "SpinJump",
-"speed": 20.0
+"speed": 25.0
 } ]

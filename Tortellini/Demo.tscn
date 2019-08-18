@@ -23,6 +23,7 @@ shadow_enabled = true
 shadow_bias = 0.05
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16.387, 1.17169, -0.05 )
 Gravity = Vector3( 0, -1, 0 )
 PlayerNumber = 1
@@ -66,24 +67,17 @@ depth = 1.0
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Block7"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 3.5, -0.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 3.5, -0.5 )
 use_collision = true
 width = 1.0
 height = 3.0
 depth = 1.0
 
 [node name="CSGBox2" type="CSGBox" parent="Block7"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 4.5, -0.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4.5, -0.5 )
 use_collision = true
 width = 1.0
 height = 5.0
-depth = 1.0
-
-[node name="CSGBox3" type="CSGBox" parent="Block7"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, -0.5 )
-use_collision = true
-width = 4.0
-height = 1.0
 depth = 1.0
 
 [node name="Block9" type="Spatial" parent="."]

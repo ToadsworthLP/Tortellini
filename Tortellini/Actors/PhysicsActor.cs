@@ -9,6 +9,7 @@ public class PhysicsActor : Actor
     public Vector3 Gravity;
     public Vector3 Velocity = Vector3.Zero;
 
+    [Export]
     public float MaxFloorAngle = 0.95f;
     protected Vector3 FloorNormal = new Vector3(0, 1, 0);
 
