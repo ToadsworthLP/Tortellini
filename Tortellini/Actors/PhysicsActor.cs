@@ -9,13 +9,13 @@ public class PhysicsActor : Actor
     public Vector3 Gravity;
     public Vector3 Velocity = Vector3.Zero;
 
-    public float MaxFloorAngle = 0.9f;
+    public float MaxFloorAngle = 0.95f;
     protected Vector3 FloorNormal = new Vector3(0, 1, 0);
 
     public bool SnapToGround = true;
 
     protected Vector3 SnapVector = new Vector3(0, -0.15f, 0);
-    private Vector3 PreviousVelocity = Vector3.Zero;
+    protected Vector3 PreviousVelocity = Vector3.Zero;
 
     public override void _PhysicsProcess(float delta)
     {
