@@ -6,7 +6,7 @@ public class PhysicsActor : Actor
     [Export]
     public bool EnablePhysics = true;
     [Export]
-    public Vector3 Gravity;
+    public Vector3 Gravity = new Vector3(0, -1, 0);
     public Vector3 Velocity = Vector3.Zero;
 
     [Export]
@@ -20,12 +20,13 @@ public class PhysicsActor : Actor
 
     public override void _PhysicsProcess(float delta)
     {
+        if(!IsInstanceValid(this)) return;
         if (EnablePhysics)
         {
             Lifetime += delta;
             StateChangeTimer += delta;
 
-            APhysicsProcess(delta);
+            APhysicsPreProcess(delta);
             CurrentState?.OnPhysicsProcessState(delta);
 
             //If we're not on the ground, add gravity

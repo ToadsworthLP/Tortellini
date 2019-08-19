@@ -4,13 +4,13 @@ using System;
 public class Actor : KinematicBody
 {
     public float Lifetime {get; protected set;}
-    protected ActorState CurrentState;
-    protected ActorState PreviousState;
+    public ActorState CurrentState {get; protected set;}
+    public ActorState PreviousState  {get; protected set;}
     protected float StateChangeTimer;
 
     //Actor methods - override these instead of Godot's!
-    public virtual void AReady() { }
-    public virtual void APhysicsProcess(float delta) { }
+    public virtual void AEnterTree() { }
+    public virtual void APhysicsPreProcess(float delta) { }
     public virtual void APhysicsPostProcess(float delta) { }
     public virtual void AProcess(float delta) { }
     public virtual void APostProcess(float delta) { }
@@ -21,9 +21,9 @@ public class Actor : KinematicBody
 
     //Behind-the-scenes implementation of certain systems that call the A-prefixed methods at the appropriate time
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
-        AReady();
+        AEnterTree();
 
         MoveLockZ = true;
 
@@ -37,7 +37,7 @@ public class Actor : KinematicBody
         Lifetime += delta;
         StateChangeTimer += delta;
 
-        APhysicsProcess(delta);
+        APhysicsPreProcess(delta);
         CurrentState?.OnPhysicsProcessState(delta);
         APhysicsPostProcess(delta);
     }

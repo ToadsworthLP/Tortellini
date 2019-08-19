@@ -35,7 +35,7 @@ public class OldPlayer : PhysicsActor
 
     public override ActorState GetDefaultState() { return StandState; }
 
-    public override void AReady() //TODO Try moving everything non-visual to Physics Processing
+    public override void AEnterTree() //TODO Try moving everything non-visual to Physics Processing
     {
         PlayerSprite = GetNodeOrNull(new NodePath("PlayerSprite")) as AnimatedSprite3D;
         ActorDetectorArea = GetNodeOrNull(new NodePath("ActorDetector")) as Area;
@@ -216,7 +216,7 @@ public class OldPlayer : PhysicsActor
         });
     }
 
-    public override void APhysicsProcess(float delta)
+    public override void APhysicsPreProcess(float delta)
     {
 
     }

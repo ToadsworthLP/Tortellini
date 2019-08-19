@@ -53,10 +53,12 @@
     <Compile Include="Tortellini\Actors\Actor.cs" />
     <Compile Include="Tortellini\Actors\ActorState.cs" />
     <Compile Include="Tortellini\Actors\PhysicsActor.cs" />
-    <Compile Include="Tortellini\Player\BigPlayer.cs" />
+    <Compile Include="Tortellini\Player\Forms\BigPlayer.cs" />
+    <Compile Include="Tortellini\Player\Forms\SmallPlayer.cs" />
     <Compile Include="Tortellini\Player\InputManager.cs" />
     <Compile Include="Tortellini\Player\OldPlayer.cs" />
     <Compile Include="Tortellini\Player\Player.cs" />
+    <Compile Include="Tortellini\Player\PlayerSpawner.cs" />
     <Compile Include="Tortellini\Utilities\Constants.cs" />
     <Compile Include="Tortellini\Utilities\DebugText.cs" />
     <Compile Include="Tortellini\Utilities\ClampedInterpolation.cs" />

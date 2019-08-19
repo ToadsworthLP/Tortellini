@@ -58,6 +58,7 @@ public class InputManager
         ALTJUMP_AXIS = "p" + playerNum + ALTJUMP_AXIS_SUFFIX;
         RUN_AXIS = "p" + playerNum + RUN_AXIS_SUFFIX;
         ALTRUN_AXIS = "p" + playerNum + ALTRUN_AXIS_SUFFIX;
+
     }
 
     public void UpdateInputs(){

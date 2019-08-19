@@ -2,52 +2,53 @@ using Godot;
 
 public class Player : PhysicsActor
 {
+    //Input manager for this player instance
+    public InputManager InputManager;
+
     //Movement parameters
-    [Export(PropertyHint.Range, "1,4")]
-    public int PlayerNumber;
     [Export]
-    public float WalkAcceleration;
+    public float WalkAcceleration = 1;
     [Export]
-    public float WalkSpeed;
+    public float WalkSpeed = 3.7f;
     [Export]
-    public float RunAcceleration;
+    public float RunAcceleration = 1;
     [Export]
-    public float RunSpeed;
+    public float RunSpeed = 6.4f;
     [Export]
-    public float LongRunAcceleration;
+    public float LongRunAcceleration = 1;
     [Export]
-    public float LongRunSpeed;
+    public float LongRunSpeed = 9.1f;
     [Export]
-    public float LongRunTime;
+    public float LongRunTime = 1;
     [Export]
-    public float IdleJumpForce;
+    public float IdleJumpForce = 12.5f;
     [Export]
-    public float WalkJumpForce;
+    public float WalkJumpForce = 13.8f;
     [Export]
-    public float LongRunJumpForce;
+    public float LongRunJumpForce = 15;
     [Export]
-    public float MaxJumpSustainTime;
+    public float MaxJumpSustainTime = 0.45f;
     [Export]
-    public float JumpSustainGravityMultiplier;
+    public float JumpSustainGravityMultiplier = 0.55f;
     [Export]
-    public float AirHorizontalAcceleration;
+    public float AirHorizontalAcceleration = 0.75f;
     [Export(PropertyHint.Range, "-1,1")]
-    public float CrouchInputThreshold;
+    public float CrouchInputThreshold = -0.5f;
     [Export(PropertyHint.Range, "0, 180")]
-    public float SlideMinAngle;
+    public float SlideMinAngle = 5;
     [Export]
-    public float SlideAcceleration;
+    public float SlideAcceleration = 0.7f;
     [Export]
-    public float SlideSpeed;
+    public float SlideSpeed = 6.4f;
     [Export]
-    public Vector2 CrouchBoostForce;
+    public Vector2 CrouchBoostForce = new Vector2(3,3);
 
     [Export]
-    public float FloorFriction;
+    public float FloorFriction = 0.5f;
     [Export]
-    public float AirFriction;
+    public float AirFriction = 0.2f;
     [Export]
-    public float SlideFriction;
+    public float SlideFriction = 0.2f;
 
 
     //Node references
@@ -64,9 +65,6 @@ public class Player : PhysicsActor
     private float SpeedLerpStartTime;
     private float SpeedLerpStartVelocity;
 
-    //Input manager for this player instance
-    private InputManager InputManager;
-
     //Controls whether player facing is set automatically based on player input
     private bool autoPlayerFacing = true;
 
@@ -75,16 +73,14 @@ public class Player : PhysicsActor
         return PlayerCollisionShape.BIG;
     }
 
-
     public override ActorState GetDefaultState() {return StandState;}
-    public override void AReady() {
-        PlayerSprite = GetNodeOrNull(new NodePath("PlayerSprite")) as AnimatedSprite3D;
-        ActorDetectorArea = GetNodeOrNull(new NodePath("ActorDetector")) as Area;
-        FloorRayCast = GetNodeOrNull(new NodePath("FloorRayCast")) as RayCast;
+    
+    public override void AEnterTree() {
+        PlayerSprite = GetNodeOrNull<AnimatedSprite3D>(new NodePath("PlayerSprite"));
+        ActorDetectorArea = GetNodeOrNull<Area>(new NodePath("ActorDetector"));
+        FloorRayCast = GetNodeOrNull<RayCast>(new NodePath("FloorRayCast"));
 
-        if (PlayerSprite == null || ActorDetectorArea == null || FloorRayCast == null) GD.PrintErr("One or multiple required child nodes could not be found! Some features won't work!");
-
-        InputManager = new InputManager(PlayerNumber);
+        if (PlayerSprite == null || ActorDetectorArea == null || FloorRayCast == null) GD.Print("One or multiple required child nodes could not be found! Some features won't work!");
 
         StandState = new ActorState(() =>
         { //Enter State
@@ -335,16 +331,16 @@ public class Player : PhysicsActor
         }, (float delta) =>
         { //State Physics Processing
             Transform slightlyRight;
-            slightlyRight.origin = Transform.origin;
-            slightlyRight.basis = Transform.basis;
+            slightlyRight.origin = GlobalTransform.origin;
+            slightlyRight.basis = GlobalTransform.basis;
             slightlyRight.origin.x += 0.4f;
 
             Transform slightlyLeft;
-            slightlyLeft.origin = Transform.origin;
-            slightlyLeft.basis = Transform.basis;
+            slightlyLeft.origin = GlobalTransform.origin;
+            slightlyLeft.basis = GlobalTransform.basis;
             slightlyLeft.origin.x -= 0.4f;
 
-            if(!TestMove(Transform, new Vector3(0, 0.5f, 0))){
+            if(GetDefaultCollisionShape() == PlayerCollisionShape.SMALL || !TestMove(GlobalTransform, new Vector3(0, 0.5f, 0))){
                 if(InputManager.DirectionalInput.y >= CrouchInputThreshold) ChangeState(StandState);
                 CanJump();
                 CanFall();
@@ -411,7 +407,7 @@ public class Player : PhysicsActor
         if(IsOnFloor() && InputManager.DirectionalInput.y < CrouchInputThreshold) ChangeState(CrouchState);
     }
 
-    public override void APhysicsProcess(float delta){
+    public override void APhysicsPreProcess(float delta){
         InputManager.UpdateInputs();
     }
 
