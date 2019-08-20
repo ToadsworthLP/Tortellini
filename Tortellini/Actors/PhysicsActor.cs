@@ -20,7 +20,6 @@ public class PhysicsActor : Actor
 
     public override void _PhysicsProcess(float delta)
     {
-        if(!IsInstanceValid(this)) return;
         if (EnablePhysics)
         {
             Lifetime += delta;

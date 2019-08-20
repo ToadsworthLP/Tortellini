@@ -75,15 +75,23 @@ public class Player : PhysicsActor
 
     public override ActorState GetDefaultState() {return StandState;}
     
-    public override void AEnterTree() {
+    public virtual void SetupPlayer(InputManager input, Transform transform, Vector3 velocity, SpriteFrames spriteFrames, bool spriteFlipped) {
         PlayerSprite = GetNodeOrNull<AnimatedSprite3D>(new NodePath("PlayerSprite"));
         ActorDetectorArea = GetNodeOrNull<Area>(new NodePath("ActorDetector"));
         FloorRayCast = GetNodeOrNull<RayCast>(new NodePath("FloorRayCast"));
 
         if (PlayerSprite == null || ActorDetectorArea == null || FloorRayCast == null) GD.Print("One or multiple required child nodes could not be found! Some features won't work!");
 
-        SetPlayerCollisionShape(GetDefaultCollisionShape());
+        InputManager = input;
+        SetGlobalTransform(transform);
+        Velocity = velocity;
+        PlayerSprite.Frames = spriteFrames;
+        PlayerSprite.SetFlipH(spriteFlipped);
 
+        SetPlayerCollisionShape(GetDefaultCollisionShape());
+    }
+
+    public override void AEnterTree() {
         StandState = new ActorState(() =>
         { //Enter State
             SnapToGround = true;
@@ -340,24 +348,26 @@ public class Player : PhysicsActor
                 return;
             }
 
+            Transform originalTransform = GetGlobalTransform();
+
             Transform slightlyRight;
-            slightlyRight.origin = GlobalTransform.origin;
-            slightlyRight.basis = GlobalTransform.basis;
-            slightlyRight.origin.x += 0.4f;
+            slightlyRight.origin = originalTransform.origin;
+            slightlyRight.basis = originalTransform.basis;
+            slightlyRight.origin.x += 0.3f;
 
             Transform slightlyLeft;
-            slightlyLeft.origin = GlobalTransform.origin;
-            slightlyLeft.basis = GlobalTransform.basis;
-            slightlyLeft.origin.x -= 0.4f;
+            slightlyLeft.origin = originalTransform.origin;
+            slightlyLeft.basis = originalTransform.basis;
+            slightlyLeft.origin.x -= 0.3f;
 
-            if(GetDefaultCollisionShape() == PlayerCollisionShape.SMALL || !TestMove(GlobalTransform, new Vector3(0, 0.5f, 0))){
+            if(GetDefaultCollisionShape() == PlayerCollisionShape.SMALL || !TestMove(originalTransform, new Vector3(0, 0.61f, 0))){
                 if(InputManager.DirectionalInput.y >= CrouchInputThreshold) ChangeState(StandState);
                 CanJump();
                 CanFall();
-            } else if(!TestMove(slightlyRight, new Vector3(0, 0.5f, 0))) {
-                ApplyForce2D(new Vector2(0.4f, 0));
-            } else if(!TestMove(slightlyLeft, new Vector3(0, 0.5f, 0))) {
-                ApplyForce2D(new Vector2(-0.4f, 0));
+            } else if(!TestMove(slightlyRight, new Vector3(0, 0.61f, 0))) {
+                ApplyForce2D(new Vector2(0.6f, 0));
+            } else if(!TestMove(slightlyLeft, new Vector3(0, 0.61f, 0))) {
+                ApplyForce2D(new Vector2(-0.6f, 0));
             } else {
                 if(InputManager.JumpJustPressed || InputManager.AltJumpJustPressed) { ApplyForce2D(new Vector2(CrouchBoostForce.x * InputManager.DirectionalInput.x, CrouchBoostForce.y)); }
             }

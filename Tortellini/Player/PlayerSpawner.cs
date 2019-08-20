@@ -19,14 +19,11 @@ public class PlayerSpawner : Spatial
 
     public enum PlayerForm {SMALL, BIG};
 
-    private InputManager CurrentInputManager;
+    private InputManager PlayerInputManager;
 
     private PlayerForm CurrentForm;
     private PackedScene CurrentScene;
     private SpriteFrames CurrentFrames;
-
-    private KinematicBody PlayerBody;
-    private Player PlayerScript;
 
     private bool IsChangingForm;
     private float FormChangeDelayTimer;
@@ -39,6 +36,9 @@ public class PlayerSpawner : Spatial
     private SpriteFrames TransitionFrames;
 
     public override void _Ready() {
+        PreviousTransform = GetGlobalTransform();
+        PreviousVelocity = Vector3.Zero;
+
         TransitionFrames = new SpriteFrames();
         TransitionFrames.AddAnimation("Transition");
         TransitionFrames.SetAnimationSpeed("Transition", 10);
@@ -51,7 +51,7 @@ public class PlayerSpawner : Spatial
         TransitionSprite.AlphaCut = SpriteBase3D.AlphaCutMode.OpaquePrepass;
 
         CurrentForm = InitialForm;
-        CurrentInputManager = new InputManager(PlayerNumber);
+        PlayerInputManager = new InputManager(PlayerNumber);
 
         ChangeForm(InitialForm, true);
     }
@@ -103,7 +103,7 @@ public class PlayerSpawner : Spatial
         oldFormScene?.SetName("QueuedForDeletion");
 
         if(oldFormScene != null) {
-            PreviousTransform = oldFormScene.Transform;
+            PreviousTransform = oldFormScene.GetGlobalTransform();
             PreviousVelocity = oldFormScene.Velocity;
 
             AnimatedSprite3D sprite = GetNode<AnimatedSprite3D>(new NodePath("QueuedForDeletion/PlayerSprite"));
@@ -146,24 +146,11 @@ public class PlayerSpawner : Spatial
         AddChild(formScene);
 
         Player newPlayerScript = GetNode<Player>(nodePath);
-        KinematicBody newFormBody = GetNode<KinematicBody>(nodePath);
-
-        if (PreviousTransform == new Transform() && PreviousVelocity == Vector3.Zero) {
-            newFormBody.SetTransform(Transform);
-        } else {
-            newFormBody.SetTransform(PreviousTransform);
-            newPlayerScript.Velocity = PreviousVelocity;
-            //newPlayerScript.ChangeState(CurrentPlayerScript.CurrentState);
-        }
-
-        newPlayerScript.InputManager = CurrentInputManager;
-
-        AnimatedSprite3D newSprite = GetNode<AnimatedSprite3D>(new NodePath(nodeName + "/PlayerSprite"));
-        string frameCacheKey = SpriteFolderName + "/" + CurrentForm.ToString();
-        newSprite.Frames = FrameCache[frameCacheKey];
-        newSprite.SetFlipH(PreviousSpriteFlipped);
-
+        
         FormChangeDelayTimer = 0;
         IsChangingForm = false;
+
+        string frameCacheKey = SpriteFolderName + "/" + CurrentForm.ToString();
+        newPlayerScript.SetupPlayer(PlayerInputManager, PreviousTransform, PreviousVelocity, FrameCache[frameCacheKey], PreviousSpriteFlipped);
     }
 }
