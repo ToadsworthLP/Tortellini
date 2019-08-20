@@ -6,7 +6,7 @@ public class PhysicsActor : Actor
     [Export]
     public bool EnablePhysics = true;
     [Export]
-    public Vector3 Gravity = new Vector3(0, -1, 0);
+    public Vector3 Gravity = new Vector3(0, -2, 0);
     public Vector3 Velocity = Vector3.Zero;
 
     [Export]
@@ -15,7 +15,7 @@ public class PhysicsActor : Actor
 
     public bool SnapToGround = true;
 
-    protected Vector3 SnapVector = new Vector3(0, -0.15f, 0);
+    protected Vector3 SnapVector = new Vector3(0, -0.3f, 0);
     protected Vector3 PreviousVelocity = Vector3.Zero;
 
     public override void _PhysicsProcess(float delta)

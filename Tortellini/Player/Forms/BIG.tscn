@@ -18,16 +18,6 @@ height = 0.419661
 [node name="BigPlayer" type="KinematicBody"]
 collision_layer = 4
 script = ExtResource( 1 )
-WalkSpeed = 3.7
-RunSpeed = 6.4
-LongRunSpeed = 9.1
-WalkJumpForce = 13.8
-MaxJumpSustainTime = 0.45
-JumpSustainGravityMultiplier = 0.55
-SlideAcceleration = 0.7
-SlideSpeed = 6.4
-AirFriction = 0.2
-SlideFriction = 0.2
 
 [node name="SmallCollision" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, -0.652, -0.5 )

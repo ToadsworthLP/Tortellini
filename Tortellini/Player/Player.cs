@@ -7,48 +7,48 @@ public class Player : PhysicsActor
 
     //Movement parameters
     [Export]
-    public float WalkAcceleration = 1;
+    public float WalkAcceleration = 2;
     [Export]
-    public float WalkSpeed = 3.7f;
+    public float WalkSpeed = 7.4f;
     [Export]
-    public float RunAcceleration = 1;
+    public float RunAcceleration = 2;
     [Export]
-    public float RunSpeed = 6.4f;
+    public float RunSpeed = 12.8f;
     [Export]
-    public float LongRunAcceleration = 1;
+    public float LongRunAcceleration = 2;
     [Export]
-    public float LongRunSpeed = 9.1f;
+    public float LongRunSpeed = 18.2f;
     [Export]
     public float LongRunTime = 1;
     [Export]
-    public float IdleJumpForce = 12.5f;
+    public float IdleJumpForce = 25;
     [Export]
-    public float WalkJumpForce = 13.8f;
+    public float WalkJumpForce = 27.6f;
     [Export]
-    public float LongRunJumpForce = 15;
+    public float LongRunJumpForce = 30;
     [Export]
     public float MaxJumpSustainTime = 0.45f;
     [Export]
     public float JumpSustainGravityMultiplier = 0.55f;
     [Export]
-    public float AirHorizontalAcceleration = 0.75f;
+    public float AirHorizontalAcceleration = 1.5f;
     [Export(PropertyHint.Range, "-1,1")]
     public float CrouchInputThreshold = -0.5f;
     [Export(PropertyHint.Range, "0, 180")]
     public float SlideMinAngle = 5;
     [Export]
-    public float SlideAcceleration = 0.7f;
+    public float SlideAcceleration = 1.4f;
     [Export]
-    public float SlideSpeed = 6.4f;
+    public float SlideSpeed = 12.8f;
     [Export]
-    public Vector2 CrouchBoostForce = new Vector2(3,3);
+    public Vector2 CrouchBoostForce = new Vector2(6,6);
 
     [Export]
-    public float FloorFriction = 0.5f;
+    public float FloorFriction = 1;
     [Export]
-    public float AirFriction = 0.2f;
+    public float AirFriction = 0.4f;
     [Export]
-    public float SlideFriction = 0.2f;
+    public float SlideFriction = 0.4f;
 
 
     //Node references
@@ -81,6 +81,8 @@ public class Player : PhysicsActor
         FloorRayCast = GetNodeOrNull<RayCast>(new NodePath("FloorRayCast"));
 
         if (PlayerSprite == null || ActorDetectorArea == null || FloorRayCast == null) GD.Print("One or multiple required child nodes could not be found! Some features won't work!");
+
+        SetPlayerCollisionShape(GetDefaultCollisionShape());
 
         StandState = new ActorState(() =>
         { //Enter State
@@ -432,8 +434,6 @@ public class Player : PhysicsActor
         if(Mathf.Abs(Velocity.x) > SpeedLimit) { Velocity.x = ClampedInterpolation.Lerp(SpeedLerpStartVelocity, SpeedLimit, (Lifetime - SpeedLerpStartTime) * (1/SpeedLerpDuration)) * Mathf.Sign(Velocity.x); }
 
         //DebugText.Display("P" + PlayerNumber + "_SpeedLimit", "P" + PlayerNumber + " Speed Limit: " + SpeedLimit.ToString());
-
-        MoveAndSlideWithSnap(new Vector3(Velocity.x, Velocity.y, 0), SnapVector, FloorNormal, false, floorMaxAngle: MaxFloorAngle);
     }
 
     public override void APostProcess(float delta) {
@@ -449,7 +449,7 @@ public class Player : PhysicsActor
             }
         }
         
-        //DebugText.Display("P" + PlayerNumber + "_Position", "P" + PlayerNumber + " Position: " + Transform.origin.ToString());
+        //DebugText.Display("P1_Position", "P1 Position: " + GlobalTransform.origin.ToString());
         //DebugText.Display("P" + PlayerNumber + "_Velocity", "P" + PlayerNumber + " Velocity: " + Velocity.ToString());
         //DebugText.Display("P" + PlayerNumber + "_StateTime", "P" + PlayerNumber + " Time in State: " + GetElapsedTimeInState().ToString());
     }
