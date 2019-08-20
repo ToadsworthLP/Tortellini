@@ -330,6 +330,13 @@ public class Player : PhysicsActor
 
         }, (float delta) =>
         { //State Physics Processing
+            //Check if we're on a slope. If yes, start sliding.
+            var angle = Mathf.Rad2Deg(Mathf.Acos(FloorRayCast.GetCollisionNormal().Dot(FloorNormal)));
+            if(angle >= SlideMinAngle){
+                ChangeState(SlideState);
+                return;
+            }
+
             Transform slightlyRight;
             slightlyRight.origin = GlobalTransform.origin;
             slightlyRight.basis = GlobalTransform.basis;
@@ -363,6 +370,7 @@ public class Player : PhysicsActor
             SnapToGround = true;
 
             PlayerSprite.SetAnimation(PlayerAnimation.SLIDE);
+            SetPlayerCollisionShape(PlayerCollisionShape.SMALL);
             autoPlayerFacing = false;
         }, (float delta) =>
         { //Process State
@@ -388,6 +396,7 @@ public class Player : PhysicsActor
         }, () =>
         { //Exit State
             autoPlayerFacing = true;
+            SetPlayerCollisionShape(GetDefaultCollisionShape());
         });
     }
 

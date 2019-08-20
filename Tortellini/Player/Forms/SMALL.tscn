@@ -40,6 +40,7 @@ playing = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 10 )
 
 [node name="FloorRayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0, -0.5 )
 enabled = true
 cast_to = Vector3( 0, -3, 0 )
 

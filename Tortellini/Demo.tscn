@@ -162,11 +162,10 @@ height = 1.0
 depth = 1.0
 
 [node name="Block6" type="Spatial" parent="."]
-editor/display_folded = true
 transform = Transform( 0.173648, 0.984808, 0, -0.984808, 0.173648, 0, 0, 0, 1, -22, 3, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Block6"]
-transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
+transform = Transform( 0.996195, -0.087156, 0, 0.087156, 0.996195, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
 use_collision = true
 width = 6.82173
 height = 1.0
