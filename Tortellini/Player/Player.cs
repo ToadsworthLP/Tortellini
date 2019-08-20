@@ -477,7 +477,7 @@ public class Player : PhysicsActor
         }
     }
 
-    protected struct PlayerAnimation {
+    public struct PlayerAnimation {
         public const string IDLE = "Idle";
         public const string WALK = "Walk";
         public const string LONG_RUN = "LongRun";

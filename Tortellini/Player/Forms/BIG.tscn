@@ -28,16 +28,13 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0400009, -0.24722, -0.5 )
 shape = SubResource( 2 )
 
 [node name="PlayerSprite" type="AnimatedSprite3D" parent="."]
-transform = Transform( 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, -0.195, -0.5 )
-pixel_size = 0.0085
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.195, -0.5 )
+pixel_size = 0.0595
 double_sided = false
 alpha_cut = 2
 frames = ExtResource( 2 )
 animation = "Idle"
 playing = true
-
-[node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 10 )
 
 [node name="FloorRayCast" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0, -0.5 )

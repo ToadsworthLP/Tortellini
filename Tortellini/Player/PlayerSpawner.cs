@@ -14,6 +14,8 @@ public class PlayerSpawner : Spatial
     public PlayerForm InitialForm;
     [Export]
     public string SpriteFolderName;
+    [Export]
+    public float FormChangeDelay = 1;
 
     public enum PlayerForm {SMALL, BIG};
 
@@ -22,26 +24,48 @@ public class PlayerSpawner : Spatial
     private PlayerForm CurrentForm;
     private PackedScene CurrentScene;
     private SpriteFrames CurrentFrames;
-    private Player CurrentPlayerScript;
-    private KinematicBody CurrentKinematicBody;
-    private AnimatedSprite3D CurrentSprite;
 
     private KinematicBody PlayerBody;
     private Player PlayerScript;
 
+    private bool IsChangingForm;
+    private float FormChangeDelayTimer;
+
+    private Transform PreviousTransform;
+    private Vector3 PreviousVelocity;
+    private bool PreviousSpriteFlipped = false;
+
+    private AnimatedSprite3D TransitionSprite;
+    private SpriteFrames TransitionFrames;
+
     public override void _Ready() {
+        TransitionFrames = new SpriteFrames();
+        TransitionFrames.AddAnimation("Transition");
+        TransitionFrames.SetAnimationSpeed("Transition", 10);
+
+        TransitionSprite = new AnimatedSprite3D();
+        TransitionSprite.SetName("TransitionSprite");
+        TransitionSprite.SetSpriteFrames(TransitionFrames);
+
         CurrentForm = InitialForm;
         CurrentInputManager = new InputManager(PlayerNumber);
 
-        LoadForm(InitialForm);
+        ChangeForm(InitialForm, true);
     }
 
     public void SetForm(PlayerForm form) {
-        if(form != CurrentForm) LoadForm(form);
+        if(form != CurrentForm && !IsChangingForm) ChangeForm(form);
+    }
+
+    public override void _Process(float delta) {
+        ForceChangeForm();
+
+        if(IsChangingForm) FormChangeDelayTimer += delta;
+        if(IsChangingForm && FormChangeDelayTimer >= FormChangeDelay) FinishFormChange(CurrentForm);
     }
 
     //TODO remove this, this is just to test form changes until proper power-ups are implemented
-    public override void _Process(float delta) {
+    private void ForceChangeForm(){
         if(Input.IsActionJustPressed("p1_formchange")) {
             switch (CurrentForm) {
                 case PlayerForm.BIG:
@@ -55,9 +79,11 @@ public class PlayerSpawner : Spatial
         }
     }
 
-    private void LoadForm(PlayerForm form) {
-        GD.Print("Changing form to " + form.ToString());
+    private void ChangeForm(PlayerForm form, bool instant = false) {
+        IsChangingForm = true;
         CurrentForm = form;
+
+        GD.Print("Changing form to " + form.ToString());
 
         if(!SceneCache.ContainsKey(CurrentForm)) {
             SceneCache.Add(CurrentForm, GD.Load<PackedScene>(Constants.FilePath.PLAYER_FORM_SCENES + CurrentForm.ToString() + ".tscn"));
@@ -70,11 +96,47 @@ public class PlayerSpawner : Spatial
         }
         CurrentFrames = FrameCache[frameCacheKey];
 
+        Player oldFormScene = GetChildCount() > 0 ? GetChildOrNull<Player>(0) : null;
+        oldFormScene?.SetName("QueuedForDeletion");
+
+        if(oldFormScene != null) {
+            PreviousTransform = oldFormScene.Transform;
+            PreviousVelocity = oldFormScene.Velocity;
+
+            AnimatedSprite3D sprite = GetNode<AnimatedSprite3D>(new NodePath("QueuedForDeletion/PlayerSprite"));
+            PreviousSpriteFlipped = sprite.IsFlippedH();
+
+            if(!instant){
+                //Create blinking state transition
+                TransitionFrames.Clear("Transition");
+
+                TransitionFrames.AddFrame("Transition", sprite.Frames.GetFrame(Player.PlayerAnimation.IDLE, 0), 0);
+                TransitionFrames.AddFrame("Transition", CurrentFrames.GetFrame(Player.PlayerAnimation.IDLE, 0), 1);
+
+                TransitionSprite.SetGlobalTransform(sprite.GetGlobalTransform().Translated(-Transform.origin));
+                TransitionSprite.SetFlipH(sprite.FlipH);
+                TransitionSprite.SetPixelSize(sprite.GetPixelSize());
+                TransitionSprite.Play("Transition");
+            }
+
+            oldFormScene.SetProcess(false);
+            oldFormScene.SetPhysicsProcess(false);
+            oldFormScene.QueueFree();
+        }
+
+        if(instant) {
+            FinishFormChange(form);
+            return;
+        }
+
+        AddChild(TransitionSprite);
+    }
+
+    private void FinishFormChange(PlayerForm form){
+        if(TransitionSprite.IsInsideTree()) RemoveChild(TransitionSprite);
+
         string nodeName = "Player" + PlayerNumber;
         NodePath nodePath = new NodePath(nodeName);
-
-        Node oldFormScene = GetChildCount() > 0 ? GetChildOrNull<Player>(0) : null;
-        oldFormScene?.SetName("QueuedForDeletion");
 
         Node formScene = CurrentScene.Instance();
         formScene.SetName(nodeName);
@@ -83,28 +145,22 @@ public class PlayerSpawner : Spatial
         Player newPlayerScript = GetNode<Player>(nodePath);
         KinematicBody newFormBody = GetNode<KinematicBody>(nodePath);
 
-        if (CurrentKinematicBody == null || CurrentPlayerScript == null) {
+        if (PreviousTransform == new Transform() && PreviousVelocity == Vector3.Zero) {
             newFormBody.SetTransform(Transform);
         } else {
-            newFormBody.SetTransform(CurrentKinematicBody.GetTransform());
-            newPlayerScript.Velocity = CurrentPlayerScript.Velocity;
+            newFormBody.SetTransform(PreviousTransform);
+            newPlayerScript.Velocity = PreviousVelocity;
             //newPlayerScript.ChangeState(CurrentPlayerScript.CurrentState);
         }
 
         newPlayerScript.InputManager = CurrentInputManager;
 
         AnimatedSprite3D newSprite = GetNode<AnimatedSprite3D>(new NodePath(nodeName + "/PlayerSprite"));
+        string frameCacheKey = SpriteFolderName + "/" + CurrentForm.ToString();
         newSprite.Frames = FrameCache[frameCacheKey];
-        if(CurrentSprite != null) newSprite.SetFlipH(CurrentSprite.IsFlippedH());
+        newSprite.SetFlipH(PreviousSpriteFlipped);
 
-        CurrentKinematicBody = newFormBody;
-        CurrentPlayerScript = newPlayerScript;
-        CurrentSprite = newSprite;
-        
-        if(oldFormScene != null) {
-            oldFormScene.SetProcess(false);
-            oldFormScene.SetPhysicsProcess(false);
-            oldFormScene.QueueFree();
-        }
+        FormChangeDelayTimer = 0;
+        IsChangingForm = false;
     }
 }

@@ -26,6 +26,7 @@ shadow_bias = 0.05
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 2, 0 )
 script = ExtResource( 1 )
 SpriteFolderName = "Mario"
+FormChangeDelay = 0.7
 
 [node name="Ground" type="Spatial" parent="."]
 editor/display_folded = true
@@ -188,7 +189,11 @@ radius = 7.0
 height = 4.0
 sides = 38
 
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 5, 10 )
+
 [node name="UI" type="Control" parent="."]
+editor/display_folded = true
 margin_right = 40.0
 margin_bottom = 40.0
 
