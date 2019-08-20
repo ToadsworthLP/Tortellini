@@ -97,6 +97,7 @@ public class Player : PhysicsActor
             }
         }, (float delta) =>
         { //State Physics Processing
+            if(Lifetime == delta) return; //Cancel if it's this player's first physics update since IsOnFloor will always return false
             if(InputManager.DirectionalInput.x != 0) ChangeState(WalkState);
             CanFall();
             CanJump();

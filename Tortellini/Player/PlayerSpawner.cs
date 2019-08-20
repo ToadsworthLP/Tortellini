@@ -46,6 +46,9 @@ public class PlayerSpawner : Spatial
         TransitionSprite = new AnimatedSprite3D();
         TransitionSprite.SetName("TransitionSprite");
         TransitionSprite.SetSpriteFrames(TransitionFrames);
+        TransitionSprite.SetCastShadowsSetting(GeometryInstance.ShadowCastingSetting.On);
+        TransitionSprite.Transparent = true;
+        TransitionSprite.AlphaCut = SpriteBase3D.AlphaCutMode.OpaquePrepass;
 
         CurrentForm = InitialForm;
         CurrentInputManager = new InputManager(PlayerNumber);
