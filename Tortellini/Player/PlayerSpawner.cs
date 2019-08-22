@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class PlayerSpawner : Spatial
 {
     #region Static
+            public static List<PlayerSpawner> PlayerSpawners = new List<PlayerSpawner>();
             private static Dictionary<string, SpriteFrames> FrameCache = new Dictionary<string, SpriteFrames>();
         	private static Dictionary<PlayerForm, PackedScene> SceneCache = new Dictionary<PlayerForm, PackedScene>();
     #endregion
@@ -16,6 +17,10 @@ public class PlayerSpawner : Spatial
     public string SpriteFolderName;
     [Export]
     public float FormChangeDelay = 1;
+    public Player CurrentPlayer {get; private set;}
+    public Vector3 CurrentPlayerPosition { get{
+        return CurrentPlayer == null ? PreviousTransform.origin : CurrentPlayer.GetGlobalTransform().origin;
+    }}
 
     public enum PlayerForm {SMALL, BIG};
 
@@ -35,7 +40,9 @@ public class PlayerSpawner : Spatial
     private AnimatedSprite3D TransitionSprite;
     private SpriteFrames TransitionFrames;
 
-    public override void _Ready() {
+    public override void _EnterTree() {
+        PlayerSpawners.Add(this);
+
         PreviousTransform = GetGlobalTransform();
         PreviousVelocity = Vector3.Zero;
 
@@ -54,6 +61,10 @@ public class PlayerSpawner : Spatial
         PlayerInputManager = new InputManager(PlayerNumber);
 
         ChangeForm(InitialForm, true);
+    }
+
+    public override void _ExitTree() {
+        PlayerSpawners.Remove(this);
     }
 
     public void SetForm(PlayerForm form) {
@@ -152,5 +163,6 @@ public class PlayerSpawner : Spatial
 
         string frameCacheKey = SpriteFolderName + "/" + CurrentForm.ToString();
         newPlayerScript.SetupPlayer(PlayerInputManager, PreviousTransform, PreviousVelocity, FrameCache[frameCacheKey], PreviousSpriteFlipped);
+        CurrentPlayer = newPlayerScript;
     }
 }

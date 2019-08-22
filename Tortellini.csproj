@@ -58,6 +58,7 @@
     <Compile Include="Tortellini\Player\InputManager.cs" />
     <Compile Include="Tortellini\Player\OldPlayer.cs" />
     <Compile Include="Tortellini\Player\Player.cs" />
+    <Compile Include="Tortellini\Player\PlayerCamera.cs" />
     <Compile Include="Tortellini\Player\PlayerSpawner.cs" />
     <Compile Include="Tortellini\Utilities\Constants.cs" />
     <Compile Include="Tortellini\Utilities\DebugText.cs" />

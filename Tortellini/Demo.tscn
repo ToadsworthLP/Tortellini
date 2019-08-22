@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Tortellini/Player/PlayerSpawner.cs" type="Script" id=1]
-[ext_resource path="res://Tortellini/Utilities/DebugText.cs" type="Script" id=2]
+[ext_resource path="res://Tortellini/Player/PlayerCamera.cs" type="Script" id=2]
+[ext_resource path="res://Tortellini/Utilities/DebugText.cs" type="Script" id=3]
 
 [sub_resource type="ProceduralSky" id=1]
 sky_curve = 0.046587
@@ -29,168 +30,187 @@ InitialForm = 1
 SpriteFolderName = "Mario"
 FormChangeDelay = 0.7
 
-[node name="Ground" type="Spatial" parent="."]
+[node name="PlayerSpawner2" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 3.47381, 0 )
+script = ExtResource( 1 )
+PlayerNumber = 2
+InitialForm = 1
+SpriteFolderName = "Mario"
+FormChangeDelay = 0.7
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.546, 10 )
+current = true
+script = ExtResource( 2 )
+TargetPositionOffset = Vector3( 0, 2, 10 )
+
+[node name="Stage" type="Spatial" parent="."]
+editor/display_folded = true
+
+[node name="Ground" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5 )
 
-[node name="CSGBox" type="CSGBox" parent="Ground"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Ground"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0 )
 use_collision = true
 width = 50.0
 height = 1.0
 depth = 3.0
 
-[node name="Block" type="Spatial" parent="."]
+[node name="Block" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
 use_collision = true
 width = 1.0
 height = 1.0
 depth = 1.0
 
-[node name="Block2" type="Spatial" parent="."]
+[node name="Block2" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block2"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5 )
 use_collision = true
 width = 1.0
 height = 1.0
 depth = 1.0
 
-[node name="Block7" type="Spatial" parent="."]
+[node name="Block7" type="Spatial" parent="Stage"]
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block7"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block7"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 3.5, -0.5 )
 use_collision = true
 width = 1.0
 height = 3.0
 depth = 1.0
 
-[node name="CSGBox2" type="CSGBox" parent="Block7"]
+[node name="CSGBox2" type="CSGBox" parent="Stage/Block7"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4.5, -0.5 )
 use_collision = true
 width = 1.0
 height = 5.0
 depth = 1.0
 
-[node name="Block9" type="Spatial" parent="."]
+[node name="Block9" type="Spatial" parent="Stage"]
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 3.5, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block9"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block9"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.5, -0.5 )
 use_collision = true
 height = 1.0
 depth = 1.0
 
-[node name="Block10" type="Spatial" parent="."]
+[node name="Block10" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 6, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block10"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block10"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -1.5, -0.5 )
 use_collision = true
 height = 1.0
 depth = 1.0
 
-[node name="Block14" type="Spatial" parent="."]
+[node name="Block14" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 7, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block14"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block14"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -0.5 )
 use_collision = true
 height = 1.0
 depth = 1.0
 
-[node name="Block11" type="Spatial" parent="."]
+[node name="Block11" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 8, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block11"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block11"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -0.5 )
 use_collision = true
 width = 4.0
 height = 1.0
 depth = 1.0
 
-[node name="Block12" type="Spatial" parent="."]
+[node name="Block12" type="Spatial" parent="Stage"]
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 9, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block12"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block12"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -0.5 )
 use_collision = true
 width = 15.0
 height = 1.0
 depth = 1.0
 
-[node name="Block3" type="Spatial" parent="."]
+[node name="Block3" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block3"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block3"]
 transform = Transform( 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
 use_collision = true
 width = 6.82173
 height = 1.0
 depth = 1.0
 
-[node name="Block4" type="Spatial" parent="."]
+[node name="Block4" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, -17, 2, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block4"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block4"]
 transform = Transform( 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
 use_collision = true
 width = 6.82173
 height = 1.0
 depth = 1.0
 
-[node name="Block5" type="Spatial" parent="."]
+[node name="Block5" type="Spatial" parent="Stage"]
 editor/display_folded = true
 transform = Transform( 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, -19, 2, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block5"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block5"]
 transform = Transform( 0.996195, 0.0871555, 0, -0.0871555, 0.996195, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
 use_collision = true
 width = 6.82173
 height = 1.0
 depth = 1.0
 
-[node name="Block6" type="Spatial" parent="."]
+[node name="Block6" type="Spatial" parent="Stage"]
+editor/display_folded = true
 transform = Transform( 0.173648, 0.984808, 0, -0.984808, 0.173648, 0, 0, 0, 1, -22, 3, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="Block6"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block6"]
 transform = Transform( 0.996195, -0.087156, 0, 0.087156, 0.996195, 0, 0, 0, 1, -2.5, -1.5, -0.5 )
 use_collision = true
 width = 6.82173
 height = 1.0
 depth = 1.0
 
-[node name="Block15" type="Spatial" parent="."]
+[node name="Block15" type="Spatial" parent="Stage"]
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 10, -0.5 )
 
-[node name="CSGBox" type="CSGBox" parent="Block15"]
+[node name="CSGBox" type="CSGBox" parent="Stage/Block15"]
 transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, 5, -10, 0 )
 use_collision = true
 width = 16.0
 height = 7.0
 depth = 3.0
 
-[node name="CSGCylinder" type="CSGCylinder" parent="Block15/CSGBox"]
+[node name="CSGCylinder" type="CSGCylinder" parent="Stage/Block15/CSGBox"]
 transform = Transform( 1, -1.1073e-014, -2.5332e-007, -2.5332e-007, -4.37114e-008, -1, 0, 1, -4.37114e-008, 0, 4, 0 )
 operation = 2
 radius = 7.0
 height = 4.0
 sides = 38
-
-[node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 13.5, 9 )
 
 [node name="UI" type="Control" parent="."]
 editor/display_folded = true
@@ -206,4 +226,4 @@ custom_colors/default_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 bbcode_enabled = true
 scroll_following = true
-script = ExtResource( 2 )
+script = ExtResource( 3 )
