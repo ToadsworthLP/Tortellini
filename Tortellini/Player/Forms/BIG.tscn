@@ -18,6 +18,7 @@ height = 0.419661
 [node name="BigPlayer" type="KinematicBody"]
 collision_layer = 4
 script = ExtResource( 1 )
+SlideMinAngle = 0.2
 
 [node name="SmallCollision" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, -0.652, -0.5 )
@@ -42,7 +43,6 @@ enabled = true
 cast_to = Vector3( 0, -3, 0 )
 
 [node name="ActorDetector" type="Area" parent="."]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0 )
 collision_layer = 4
 collision_mask = 6

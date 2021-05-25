@@ -44,10 +44,13 @@ public class PhysicsActor : Actor
             APhysicsPostProcess(delta);
 
             if(SnapToGround) {
-                MoveAndSlideWithSnap(Velocity, SnapVector, floorMaxAngle: 0.9f, floorNormal: FloorNormal);
-            } else {
-                MoveAndSlide(Velocity, floorMaxAngle: 0.9f, floorNormal: FloorNormal);
+                MoveAndSlideWithSnap(Velocity, SnapVector, upDirection: Vector3.Up, floorMaxAngle: 0.9f);
             }
+            else {
+                MoveAndSlide(Velocity, upDirection: Vector3.Up, floorMaxAngle: 0.9f);
+            }
+
+            if(IsOnFloor()) FloorNormal = GetFloorNormal();
 
             PreviousVelocity = Velocity;
         }

@@ -5,15 +5,15 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 	Debug|Any CPU = Debug|Any CPU
-	ExportDebug|Any CPU = ExportDebug|Any CPU
-	ExportRelease|Any CPU = ExportRelease|Any CPU
+	Release|Any CPU = Release|Any CPU
+	Tools|Any CPU = Tools|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{72AC6487-A38D-4353-8D61-3745AB71A24F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72AC6487-A38D-4353-8D61-3745AB71A24F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72AC6487-A38D-4353-8D61-3745AB71A24F}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{72AC6487-A38D-4353-8D61-3745AB71A24F}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{72AC6487-A38D-4353-8D61-3745AB71A24F}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{72AC6487-A38D-4353-8D61-3745AB71A24F}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{72AC6487-A38D-4353-8D61-3745AB71A24F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72AC6487-A38D-4353-8D61-3745AB71A24F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72AC6487-A38D-4353-8D61-3745AB71A24F}.Tools|Any CPU.ActiveCfg = Tools|Any CPU
+		{72AC6487-A38D-4353-8D61-3745AB71A24F}.Tools|Any CPU.Build.0 = Tools|Any CPU
 	EndGlobalSection
 EndGlobal

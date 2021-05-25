@@ -83,10 +83,10 @@ public class Player : PhysicsActor
         if (PlayerSprite == null || ActorDetectorArea == null || FloorRayCast == null) GD.Print("One or multiple required child nodes could not be found! Some features won't work!");
 
         InputManager = input;
-        SetGlobalTransform(transform);
+        GlobalTransform = transform;
         Velocity = velocity;
         PlayerSprite.Frames = spriteFrames;
-        PlayerSprite.SetFlipH(spriteFlipped);
+        PlayerSprite.FlipH = spriteFlipped;
 
         SetPlayerCollisionShape(GetDefaultCollisionShape());
     }
@@ -98,10 +98,10 @@ public class Player : PhysicsActor
         }, (float delta) =>
         { //Process State
             if(Mathf.Abs(Velocity.x) > 0.5f) {
-                PlayerSprite.SetAnimation(PlayerAnimation.WALK);
+                PlayerSprite.Animation = PlayerAnimation.WALK;
                 PlayerSprite.Frames.SetAnimationSpeed(PlayerAnimation.WALK, (Mathf.Abs(Velocity.x)) + 5);
             } else {
-                PlayerSprite.SetAnimation(PlayerAnimation.IDLE);
+                PlayerSprite.Animation = PlayerAnimation.IDLE;
             }
         }, (float delta) =>
         { //State Physics Processing
@@ -122,10 +122,10 @@ public class Player : PhysicsActor
         }, (float delta) =>
         { //Process State
             if(Mathf.Sign(Velocity.x) == Mathf.Sign(InputManager.DirectionalInput.x) || Velocity.x == 0) {
-                PlayerSprite.SetAnimation(PlayerAnimation.WALK);
+                PlayerSprite.Animation = PlayerAnimation.WALK;
                 PlayerSprite.Frames.SetAnimationSpeed(PlayerAnimation.WALK, (Mathf.Abs(Velocity.x)) + 5);
             } else {
-                PlayerSprite.SetAnimation(PlayerAnimation.TURN);
+                PlayerSprite.Animation = PlayerAnimation.TURN;
             }
         }, (float delta) =>
         { //State Physics Processing
@@ -149,10 +149,10 @@ public class Player : PhysicsActor
         }, (float delta) =>
         { //Process State
             if(Mathf.Sign(Velocity.x) == Mathf.Sign(InputManager.DirectionalInput.x) || Velocity.x == 0) {
-                PlayerSprite.SetAnimation(PlayerAnimation.WALK);
+                PlayerSprite.Animation = PlayerAnimation.WALK;
                 PlayerSprite.Frames.SetAnimationSpeed(PlayerAnimation.WALK, (Mathf.Abs(Velocity.x)) + 7);
             } else {
-                PlayerSprite.SetAnimation(PlayerAnimation.TURN);
+                PlayerSprite.Animation = PlayerAnimation.TURN;
             }
         }, (float delta) =>
         { //State Physics Processing
@@ -172,16 +172,16 @@ public class Player : PhysicsActor
 
         LongRunState = new ActorState(() =>
         { //Enter State
-            PlayerSprite.SetAnimation(PlayerAnimation.LONG_RUN);
+            PlayerSprite.Animation = PlayerAnimation.LONG_RUN;
             SetSpeedLimit(LongRunSpeed);
             SnapToGround = true;
         }, (float delta) =>
         { //Process State
             if(Mathf.Sign(Velocity.x) == Mathf.Sign(InputManager.DirectionalInput.x) || Velocity.x == 0) {
-                PlayerSprite.SetAnimation(PlayerAnimation.LONG_RUN);
+                PlayerSprite.Animation = PlayerAnimation.LONG_RUN;
                 PlayerSprite.Frames.SetAnimationSpeed(PlayerAnimation.LONG_RUN, (Mathf.Abs(Velocity.x)) + 10);
             } else {
-                PlayerSprite.SetAnimation(PlayerAnimation.TURN);
+                PlayerSprite.Animation = PlayerAnimation.TURN;
             }
         }, (float delta) =>
         { //State Physics Processing
@@ -205,17 +205,17 @@ public class Player : PhysicsActor
             float speed = Mathf.Abs(Velocity.x);
             if(speed > RunSpeed) {
                 ApplyForce2D(new Vector2(0, LongRunJumpForce));
-                PlayerSprite.SetAnimation(PlayerAnimation.HIGH_JUMP);
+                PlayerSprite.Animation = PlayerAnimation.HIGH_JUMP;
             } else if(speed > 0.5f) {
                 ApplyForce2D(new Vector2(0, WalkJumpForce));
-                PlayerSprite.SetAnimation(PlayerAnimation.JUMP);
+                PlayerSprite.Animation = PlayerAnimation.JUMP;
             } else if(PreviousState == CrouchState) {
                 ApplyForce2D(new Vector2(0, IdleJumpForce));
-                PlayerSprite.SetAnimation(PlayerAnimation.CROUCH);
+                PlayerSprite.Animation = PlayerAnimation.CROUCH;
                 SetPlayerCollisionShape(PlayerCollisionShape.SMALL);
             } else {
                 ApplyForce2D(new Vector2(0, IdleJumpForce));
-                PlayerSprite.SetAnimation(PlayerAnimation.JUMP);
+                PlayerSprite.Animation = PlayerAnimation.JUMP;
             }
         }, (float delta) =>
         { //Process State
@@ -247,7 +247,7 @@ public class Player : PhysicsActor
         SpinJumpState = new ActorState(() =>
         { //Enter State
             SnapToGround = false;
-            PlayerSprite.SetAnimation(PlayerAnimation.SPIN_JUMP);
+            PlayerSprite.Animation = PlayerAnimation.SPIN_JUMP;
 
             float speed = Mathf.Abs(Velocity.x);
             if(speed > RunSpeed) {
@@ -288,12 +288,12 @@ public class Player : PhysicsActor
         FallState = new ActorState(() =>
         { //Enter State
             if(InputManager.DirectionalInput.y < CrouchInputThreshold) {
-                PlayerSprite.SetAnimation(PlayerAnimation.CROUCH);
+                PlayerSprite.Animation = PlayerAnimation.CROUCH;
                 SetPlayerCollisionShape(PlayerCollisionShape.SMALL);
             } else if (PreviousState == SpinJumpState) {
-                PlayerSprite.SetAnimation(PlayerAnimation.SPIN_JUMP);
+                PlayerSprite.Animation = PlayerAnimation.SPIN_JUMP;
             } else {
-                PlayerSprite.SetAnimation(PlayerAnimation.FALL);
+                PlayerSprite.Animation = PlayerAnimation.FALL;
             }
             SnapToGround = false;
         }, (float delta) =>
@@ -328,13 +328,13 @@ public class Player : PhysicsActor
         { //Enter State
             SnapToGround = true;
 
-            var angle = Mathf.Rad2Deg(Mathf.Acos(FloorRayCast.GetCollisionNormal().Dot(FloorNormal)));
-            if(angle >= SlideMinAngle){
+            var angle = Mathf.Acos(FloorNormal.Dot(Vector3.Up));
+            if (angle >= SlideMinAngle){
                 ChangeState(SlideState);
                 return;
             }
 
-            PlayerSprite.SetAnimation(PlayerAnimation.CROUCH);
+            PlayerSprite.Animation = PlayerAnimation.CROUCH;
             SetPlayerCollisionShape(PlayerCollisionShape.SMALL);
         }, (float delta) =>
         { //Process State
@@ -342,13 +342,13 @@ public class Player : PhysicsActor
         }, (float delta) =>
         { //State Physics Processing
             //Check if we're on a slope. If yes, start sliding.
-            var angle = Mathf.Rad2Deg(Mathf.Acos(FloorRayCast.GetCollisionNormal().Dot(FloorNormal)));
+            var angle = Mathf.Acos(FloorNormal.Dot(Vector3.Up));
             if(angle >= SlideMinAngle){
                 ChangeState(SlideState);
                 return;
             }
 
-            Transform originalTransform = GetGlobalTransform();
+            Transform originalTransform = GlobalTransform;
 
             Transform slightlyRight;
             slightlyRight.origin = originalTransform.origin;
@@ -382,7 +382,7 @@ public class Player : PhysicsActor
             SetSpeedLimit(SlideSpeed);
             SnapToGround = true;
 
-            PlayerSprite.SetAnimation(PlayerAnimation.SLIDE);
+            PlayerSprite.Animation = PlayerAnimation.SLIDE;
             SetPlayerCollisionShape(PlayerCollisionShape.SMALL);
             autoPlayerFacing = false;
         }, (float delta) =>
@@ -390,21 +390,20 @@ public class Player : PhysicsActor
             //Manually flip the sprite according to the movement direction
             if (Velocity.x > 0)
             {
-                PlayerSprite.SetFlipH(false);
+                PlayerSprite.FlipH = false;
             }
             else if (Velocity.x < 0)
             {
-                PlayerSprite.SetFlipH(true);
+                PlayerSprite.FlipH = true;
             }
         }, (float delta) =>
         { //State Physics Processing
-            Vector3 normal = FloorRayCast.GetCollisionNormal();
-            float angle = Mathf.Rad2Deg(Mathf.Acos(normal.Dot(FloorNormal)));
-            if(angle < SlideMinAngle) ChangeState(InputManager.DirectionalInput.y < CrouchInputThreshold ? CrouchState : StandState );
+            float angle = Mathf.Acos(FloorNormal.Dot(Vector3.Up));
+            if (angle < SlideMinAngle) ChangeState(InputManager.DirectionalInput.y < CrouchInputThreshold ? CrouchState : StandState );
             CanFall();
             CanJump();
 
-            float force = Mathf.Sign(normal.x) * SlideAcceleration;
+            float force = Mathf.Sign(FloorNormal.x) * SlideAcceleration;
             ApplyForce2D(new Vector2(force, 0));
         }, () =>
         { //Exit State
@@ -452,11 +451,11 @@ public class Player : PhysicsActor
         if(autoPlayerFacing){
             if (InputManager.DirectionalInput.x > 0)
             {
-                PlayerSprite.SetFlipH(false);
+                PlayerSprite.FlipH = false;
             }
             else if (InputManager.DirectionalInput.x < 0)
             {
-                PlayerSprite.SetFlipH(true);
+                PlayerSprite.FlipH = true;
             }
         }
         

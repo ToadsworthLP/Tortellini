@@ -19,7 +19,7 @@ public class PlayerSpawner : Spatial
     public float FormChangeDelay = 1;
     public Player CurrentPlayer {get; private set;}
     public Vector3 CurrentPlayerPosition { get{
-        return CurrentPlayer == null ? PreviousTransform.origin : CurrentPlayer.GetGlobalTransform().origin;
+        return CurrentPlayer == null ? PreviousTransform.origin : CurrentPlayer.GlobalTransform.origin;
     }}
 
     public enum PlayerForm {SMALL, BIG};
@@ -43,7 +43,7 @@ public class PlayerSpawner : Spatial
     public override void _EnterTree() {
         PlayerSpawners.Add(this);
 
-        PreviousTransform = GetGlobalTransform();
+        PreviousTransform = GlobalTransform;
         PreviousVelocity = Vector3.Zero;
 
         TransitionFrames = new SpriteFrames();
@@ -51,9 +51,9 @@ public class PlayerSpawner : Spatial
         TransitionFrames.SetAnimationSpeed("Transition", 10);
 
         TransitionSprite = new AnimatedSprite3D();
-        TransitionSprite.SetName("TransitionSprite");
-        TransitionSprite.SetSpriteFrames(TransitionFrames);
-        TransitionSprite.SetCastShadowsSetting(GeometryInstance.ShadowCastingSetting.On);
+        TransitionSprite.Name = "TransitionSprite";
+        TransitionSprite.Frames = TransitionFrames;
+        TransitionSprite.CastShadow = GeometryInstance.ShadowCastingSetting.On;
         TransitionSprite.Transparent = true;
         TransitionSprite.AlphaCut = SpriteBase3D.AlphaCutMode.OpaquePrepass;
 
@@ -80,7 +80,7 @@ public class PlayerSpawner : Spatial
 
     //TODO remove this, this is just to test form changes until proper power-ups are implemented
     private void ForceChangeForm(){
-        if(Input.IsActionJustPressed("p1_formchange")) {
+        if(Input.IsActionJustPressed("p" + PlayerNumber + "_formchange")) {
             switch (CurrentForm) {
                 case PlayerForm.BIG:
                 SetForm(PlayerForm.SMALL);
@@ -111,14 +111,14 @@ public class PlayerSpawner : Spatial
         CurrentFrames = FrameCache[frameCacheKey];
 
         Player oldFormScene = GetChildCount() > 0 ? GetChildOrNull<Player>(0) : null;
-        oldFormScene?.SetName("QueuedForDeletion");
+        if(oldFormScene != null) oldFormScene.Name = "QueuedForDeletion";
 
-        if(oldFormScene != null) {
-            PreviousTransform = oldFormScene.GetGlobalTransform();
+        if (oldFormScene != null) {
+            PreviousTransform = oldFormScene.GlobalTransform;
             PreviousVelocity = oldFormScene.Velocity;
 
             AnimatedSprite3D sprite = GetNode<AnimatedSprite3D>(new NodePath("QueuedForDeletion/PlayerSprite"));
-            PreviousSpriteFlipped = sprite.IsFlippedH();
+            PreviousSpriteFlipped = sprite.FlipH;
 
             if(!instant){
                 //Create blinking state transition
@@ -127,9 +127,9 @@ public class PlayerSpawner : Spatial
                 TransitionFrames.AddFrame("Transition", sprite.Frames.GetFrame(Player.PlayerAnimation.IDLE, 0), 0);
                 TransitionFrames.AddFrame("Transition", CurrentFrames.GetFrame(Player.PlayerAnimation.IDLE, 0), 1);
 
-                TransitionSprite.SetGlobalTransform(sprite.GetGlobalTransform().Translated(-Transform.origin));
-                TransitionSprite.SetFlipH(sprite.FlipH);
-                TransitionSprite.SetPixelSize(sprite.GetPixelSize());
+                TransitionSprite.GlobalTransform = sprite.GlobalTransform.Translated(-Transform.origin);
+                TransitionSprite.FlipH = sprite.FlipH;
+                TransitionSprite.PixelSize = sprite.PixelSize;
                 TransitionSprite.Play("Transition");
             }
 
@@ -153,7 +153,7 @@ public class PlayerSpawner : Spatial
         NodePath nodePath = new NodePath(nodeName);
 
         Node formScene = CurrentScene.Instance();
-        formScene.SetName(nodeName);
+        formScene.Name = nodeName;
         AddChild(formScene);
 
         Player newPlayerScript = GetNode<Player>(nodePath);

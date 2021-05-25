@@ -24,16 +24,8 @@ shadow_enabled = true
 shadow_bias = 0.05
 
 [node name="PlayerSpawner" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 16, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.424299, 0.968563, 0 )
 script = ExtResource( 1 )
-InitialForm = 1
-SpriteFolderName = "Mario"
-FormChangeDelay = 0.7
-
-[node name="PlayerSpawner2" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 3.47381, 0 )
-script = ExtResource( 1 )
-PlayerNumber = 2
 InitialForm = 1
 SpriteFolderName = "Mario"
 FormChangeDelay = 0.7
@@ -45,10 +37,8 @@ script = ExtResource( 2 )
 TargetPositionOffset = Vector3( 0, 2, 10 )
 
 [node name="Stage" type="Spatial" parent="."]
-editor/display_folded = true
 
 [node name="Ground" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Ground"]
@@ -59,7 +49,6 @@ height = 1.0
 depth = 3.0
 
 [node name="Block" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block"]
@@ -70,7 +59,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block2" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block2"]
@@ -81,7 +69,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block7" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block7"]
@@ -99,7 +86,6 @@ height = 5.0
 depth = 1.0
 
 [node name="Block9" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 3.5, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block9"]
@@ -109,7 +95,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block10" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 6, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block10"]
@@ -119,7 +104,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block14" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 7, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block14"]
@@ -129,7 +113,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block11" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 8, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block11"]
@@ -140,7 +123,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block12" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 9, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block12"]
@@ -151,7 +133,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block3" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block3"]
@@ -162,7 +143,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block4" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, -17, 2, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block4"]
@@ -173,7 +153,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block5" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, -19, 2, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block5"]
@@ -184,7 +163,6 @@ height = 1.0
 depth = 1.0
 
 [node name="Block6" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 0.173648, 0.984808, 0, -0.984808, 0.173648, 0, 0, 0, 1, -22, 3, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block6"]
@@ -195,25 +173,23 @@ height = 1.0
 depth = 1.0
 
 [node name="Block15" type="Spatial" parent="Stage"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 10, -0.5 )
 
 [node name="CSGBox" type="CSGBox" parent="Stage/Block15"]
-transform = Transform( 1, -2.5332e-007, 0, 2.5332e-007, 1, 0, 0, 0, 1, 5, -10, 0 )
+transform = Transform( 1, -2.5332e-07, 0, 2.5332e-07, 1, 0, 0, 0, 1, 5, -10, 0 )
 use_collision = true
 width = 16.0
 height = 7.0
 depth = 3.0
 
 [node name="CSGCylinder" type="CSGCylinder" parent="Stage/Block15/CSGBox"]
-transform = Transform( 1, -1.1073e-014, -2.5332e-007, -2.5332e-007, -4.37114e-008, -1, 0, 1, -4.37114e-008, 0, 4, 0 )
+transform = Transform( 1, -1.1073e-14, -2.5332e-07, -2.5332e-07, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 4, 0 )
 operation = 2
 radius = 7.0
 height = 4.0
 sides = 38
 
 [node name="UI" type="Control" parent="."]
-editor/display_folded = true
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -227,3 +203,6 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 bbcode_enabled = true
 scroll_following = true
 script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
